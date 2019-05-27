@@ -134,6 +134,8 @@ int instructions (InstructionRegister IR)
     }
 }
 
+//testing
+
 
 
 
