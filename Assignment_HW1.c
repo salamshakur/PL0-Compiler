@@ -26,5 +26,3 @@ void main()
 
     return 0;
 }
-
-// test
