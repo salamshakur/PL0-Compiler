@@ -39,7 +39,7 @@ void   printRun();
 void   printStack();
 int    halt = 1;
 int    init = 1;
-char * operation;
+char * operationName;
 
 
 /* main driver */
@@ -62,20 +62,6 @@ int main()
 
     // allocate structs
     IR * IR = calloc(sizeof(IR), 1);
-
-    // testing
-    // for(int i = 0; i < 23; i++)
-    // {
-    //     printf("stack[%d] = %d\n", i, DS[i]);
-    // }
-    //  for(int i = 0; i < 8; i++)
-    // {
-    //     printf("rf[%d] = %d\n", i, RF[i]);
-    // }
-    // printf("pc = %d\n", *PC);
-    // printf("bp = %d\n", *BP);
-    // printf("gp = %d\n", *GP);
-    // printf("sp = %d\n", *SP);
     
     while(halt)
     {
@@ -105,101 +91,87 @@ void fetch(IR * IR)
 
 void execute(IR * IR)
 {
-
-    // testing
-    // printf("\n");
-    // printf("op - %d \n", IR->op);
-    // printf("r  - %d \n", IR->r);
-    // printf("l  - %d \n", IR->l);
-    // printf("m  - %d \n", IR->m);
-
     switch(IR->op)
     {
-        case 1:         // LIT
-            printf("LIT \n");            
+        case 1:         
+            operationName = "LIT";
             break;
-        case 2:         // RTN
-            printf("RTN \n");
+        case 2:         
+            operationName = "RTN";
             break;      
-        case 3:         // LOD
-            printf("LOD \n");
+        case 3:         
+            operationName = "LOD";
             break;
-        case 4:         // STO
-            printf("STO \n");
+        case 4:         
+            operationName = "STO";
             break;
-        case 5:         // CAL
-            printf("CAL \n");
+        case 5:         
+            operationName = "CAL";
             break;
-        case 6:         // INC
-            printf("INC \n");
+        case 6:         
+            operationName = "INC";
             break;
-        case 7:         // JMP
-            printf("JMP \n");
+        case 7:         
+            operationName = "JMP";
             break;
-        case 8:         // JPC
-            printf("JPC \n");
+        case 8:         
+            operationName = "JPC";
             break;
-        case 9:         // SIO (1)
-            if(IR->m != 1)
-                printf("Invalid M \n");
-            else
-                printf("SIO 1 \n");            
+        case 9:          
+            operationName = "SIO";
+            if(IR->m == 1)
+                //
             break;
-        case 10:        // SIO (2)
-            if(IR->m != 2)
-                printf("Invalid M \n");
-            else
-                printf("SIO 2 \n");            
+        case 10:         
+            operationName = "SIO";
+            if(IR->m == 2)
+                //
             break;
-        case 11:        // SIO (3)
-            if(IR->m != 3)
-                printf("Invalid M \n");
-            else{
-                printf("SIO 3");
-                halt = 0;
-            }           
+        case 11:         
+            operationName = "SIO";
+            if(IR->m == 3)
+                halt = 0;       
             break;
-        case 12:        // NEG
-        printf("NEG \n");        
+        case 12:        
+            operationName = "NEG";
             break;
-        case 13:        // ADD
-        printf("ADD \n");        
+        case 13:        
+            operationName = "ADD";
             break;
-        case 14:        // SUB
-        printf("SUB \n");        
+        case 14:        
+            operationName = "SUB";
             break;
-        case 15:        // MUL
-        printf("MUL \n");                
+        case 15:        
+            operationName = "MUL";
             break;
-        case 16:        // DIV
-        printf("DIV \n");        
+        case 16:        
+            operationName = "DIV";
             break;
-        case 17:        // ODD
-        printf("ODD \n");        
+        case 17:        
+            operationName = "ODD";
             break;
-        case 18:        // MOD
-        printf("MOD \n");        
+        case 18:        
+            operationName = "MOD";
             break;
-        case 19:        // EQL
-        printf("EQL \n");        
+        case 19:        
+            operationName = "EQL";
             break;
-        case 20:        // NEQ
-        printf("NEQ \n");        
+        case 20:        
+            operationName = "NEQ";
             break;
-        case 21:        // LSS
-        printf("LSS \n");        
+        case 21:        
+            operationName = "LSS";
             break;
-        case 22:        // LEQ
-        printf("LEQ \n");        
+        case 22:
+            operationName = "LEQ";
             break;
-        case 23:        // GTR
-        printf("GTR \n");
+        case 23:  
+            operationName = "GTR";
             break;
-        case 24:        // GEQ
-        printf("GEQ \n");
+        case 24:
+            operationName = "GEQ";
             break;
-        default:        // DEFAULT CASE
-        printf("INVALID OP \n");
+        default:
             break;
     }
 
@@ -227,10 +199,12 @@ void printRun()
         printf("              \t\t\t gp \t pc \t bp \t sp \t data \t\t stack \n");
         printf("InitialValues \t\t\t %d \t %d \t %d \t %d \t ", *GP, *PC, *BP, *SP);
         printStack();
+        init = 0;
     }
     else
     {
-
+        // TODO
+        printf("%s\n", operationName);
     }
 }
 
