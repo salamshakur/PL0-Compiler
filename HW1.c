@@ -32,9 +32,12 @@ typedef struct IR
 void fetch(IR * IR);
 void execute(IR * IR);
 
+
 /* helpers */
 int  base(int l, int base);
 void print();
+int  halt = 1;
+
 
 /* main driver */
 int main()
@@ -58,24 +61,27 @@ int main()
     IR * IR = calloc(sizeof(IR), 1);
 
     // testing
-    for(int i = 0; i < 23; i++)
-    {
-        printf("stack[%d] = %d\n", i, DS[i]);
-    }
-     for(int i = 0; i < 8; i++)
-    {
-        printf("rf[%d] = %d\n", i, RF[i]);
-    }
-    printf("pc = %d\n", *PC);
-    printf("bp = %d\n", *BP);
-    printf("gp = %d\n", *GP);
-    printf("sp = %d\n", *SP);
+    // for(int i = 0; i < 23; i++)
+    // {
+    //     printf("stack[%d] = %d\n", i, DS[i]);
+    // }
+    //  for(int i = 0; i < 8; i++)
+    // {
+    //     printf("rf[%d] = %d\n", i, RF[i]);
+    // }
+    // printf("pc = %d\n", *PC);
+    // printf("bp = %d\n", *BP);
+    // printf("gp = %d\n", *GP);
+    // printf("sp = %d\n", *SP);
     
-    // fetch instruction
-    fetch(IR);
+    while(halt)
+    {
+        // fetch instruction
+        fetch(IR);
 
-    // execute instruction
-    execute(IR);
+        // execute instruction
+        execute(IR);
+    }
 
     return EXIT_SUCCESS;
 }
@@ -95,63 +101,99 @@ void execute(IR * IR)
 {
 
     // testing
-    printf("\n");
-    printf("op - %d \n", IR->op);
-    printf("r  - %d \n", IR->r);
-    printf("l  - %d \n", IR->l);
-    printf("m  - %d \n", IR->m);
+    // printf("\n");
+    // printf("op - %d \n", IR->op);
+    // printf("r  - %d \n", IR->r);
+    // printf("l  - %d \n", IR->l);
+    // printf("m  - %d \n", IR->m);
 
     switch(IR->op)
     {
         case 1:         // LIT
+            printf("LIT \n");            
             break;
         case 2:         // RTN
+            printf("RTN \n");
             break;      
         case 3:         // LOD
+            printf("LOD \n");
             break;
         case 4:         // STO
+            printf("STO \n");
             break;
         case 5:         // CAL
+            printf("CAL \n");
             break;
         case 6:         // INC
+            printf("INC \n");
             break;
         case 7:         // JMP
+            printf("JMP \n");
             break;
         case 8:         // JPC
+            printf("JPC \n");
             break;
-        case 9:         // SIO
+        case 9:         // SIO (1)
+            if(IR->m != 1)
+                printf("Invalid M \n");
+            else
+                printf("SIO 1 \n");            
             break;
-        case 10:        //
+        case 10:        // SIO (2)
+            if(IR->m != 2)
+                printf("Invalid M \n");
+            else
+                printf("SIO 2 \n");            
             break;
-        case 11:        //
+        case 11:        // SIO (3)
+            if(IR->m != 3)
+                printf("Invalid M \n");
+            else{
+                printf("SIO 3");
+                halt = 0;
+            }           
             break;
         case 12:        // NEG
+        printf("NEG \n");        
             break;
         case 13:        // ADD
+        printf("ADD \n");        
             break;
         case 14:        // SUB
+        printf("SUB \n");        
             break;
         case 15:        // MUL
+        printf("MUL \n");                
             break;
         case 16:        // DIV
+        printf("DIV \n");        
             break;
         case 17:        // ODD
+        printf("ODD \n");        
             break;
         case 18:        // MOD
+        printf("MOD \n");        
             break;
         case 19:        // EQL
+        printf("EQL \n");        
             break;
         case 20:        // NEQ
+        printf("NEQ \n");        
             break;
         case 21:        // LSS
+        printf("LSS \n");        
             break;
         case 22:        // LEQ
+        printf("LEQ \n");        
             break;
         case 23:        // GTR
+        printf("GTR \n");
             break;
         case 24:        // GEQ
+        printf("GEQ \n");
             break;
         default:        // DEFAULT CASE
+        printf("INVALID OP \n");
             break;
     }
 
