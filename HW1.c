@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+
 /* definitions */
 #define MAX_STACK_HEIGHT 23
 #define MAX_CODE_LENGTH  500
@@ -16,6 +17,7 @@ int  * GP;                  // global pointer
 int  * SP;                  // stack pointer
 int *  Stack;               // stack (0-22)
 
+
 /* instruction register */
 typedef struct IR
 {
@@ -25,9 +27,11 @@ typedef struct IR
     int m;                   // modifier
 } IR;
 
+
 /* cycles */
 void fetch();
 void execute(IR ir);
+
 
 /* main driver */
 int main()
@@ -42,14 +46,29 @@ int main()
     SP    = calloc(sizeof(int), 1);
    
     // initialize variables
-    PC =  0;
-    BP =  0;
-    GP = -1;
-    SP = MAX_STACK_HEIGHT;
+    *PC =  0;
+    *BP =  0;
+    *GP = -1;
+    *SP = MAX_STACK_HEIGHT;
 
     // allocate structs
     IR * IR = calloc(sizeof(IR), 1);
 
+    // testing
+    for(int i = 0; i < 23; i++)
+    {
+        printf("stack[%d] = %d\n", i, Stack[i]);
+    }
+     for(int i = 0; i < 8; i++)
+    {
+        printf("rf[%d] = %d\n", i, RF[i]);
+    }
+    printf("pc = %d\n", *PC);
+    printf("bp = %d\n", *BP);
+    printf("gp = %d\n", *GP);
+    printf("sp = %d\n", *SP);
+
+    //
 
     return EXIT_SUCCESS;
 }
