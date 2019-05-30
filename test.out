@@ -1,0 +1,17 @@
+JMP 
+JMP 
+INC 
+LIT 
+STO 
+LIT 
+STO 
+LIT 
+STO 
+RTN 
+INC 
+LIT 
+STO 
+LIT 
+STO 
+CAL 
+SIO 3

@@ -199,3 +199,22 @@ void execute(IR * IR)
 
     return;
 }
+
+
+int base(int l, int base)
+{
+    int bl;
+    bl = base;
+
+    while(l > 0)
+    {
+        bl = DS[bl - 1];
+        l--;
+    }
+    return bl;
+}
+
+void print()
+{
+    
+}
