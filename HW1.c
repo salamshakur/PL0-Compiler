@@ -71,7 +71,6 @@ int main()
     printf("gp = %d\n", *GP);
     printf("sp = %d\n", *SP);
     
-
     // fetch instruction
     fetch(IR);
 
@@ -96,7 +95,7 @@ void execute(IR * IR)
 {
 
     // testing
-    printf("        \n");
+    printf("\n");
     printf("op - %d \n", IR->op);
     printf("r  - %d \n", IR->r);
     printf("l  - %d \n", IR->l);
@@ -104,55 +103,55 @@ void execute(IR * IR)
 
     switch(IR->op)
     {
-        case 1:
+        case 1:         // LIT
             break;
-        case 2:
+        case 2:         // RTN
+            break;      
+        case 3:         // LOD
             break;
-        case 3:
+        case 4:         // STO
             break;
-        case 4:
+        case 5:         // CAL
             break;
-        case 5:
+        case 6:         // INC
             break;
-        case 6:
+        case 7:         // JMP
             break;
-        case 7:
+        case 8:         // JPC
             break;
-        case 8:
+        case 9:         // SIO
             break;
-        case 9:
+        case 10:        //
             break;
-        case 10:
+        case 11:        //
             break;
-        case 11:
+        case 12:        // NEG
             break;
-        case 12:
+        case 13:        // ADD
             break;
-        case 13:
+        case 14:        // SUB
             break;
-        case 14:
+        case 15:        // MUL
             break;
-        case 15:
+        case 16:        // DIV
             break;
-        case 16:
+        case 17:        // ODD
             break;
-        case 17:
+        case 18:        // MOD
             break;
-        case 18:
+        case 19:        // EQL
             break;
-        case 19:
+        case 20:        // NEQ
             break;
-        case 20:
+        case 21:        // LSS
             break;
-        case 21:
+        case 22:        // LEQ
             break;
-        case 22:
+        case 23:        // GTR
             break;
-        case 23:
+        case 24:        // GEQ
             break;
-        case 24:
-            break;
-        default:
+        default:        // DEFAULT CASE
             break;
     }
 
