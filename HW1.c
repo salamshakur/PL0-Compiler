@@ -34,9 +34,12 @@ void execute(IR * IR);
 
 
 /* helpers */
-int  base(int l, int base);
-void print();
-int  halt = 1;
+int    base(int l, int base);
+void   printRun();
+void   printStack();
+int    halt = 1;
+int    init = 1;
+char * operation;
 
 
 /* main driver */
@@ -76,6 +79,9 @@ int main()
     
     while(halt)
     {
+        // print run
+        printRun();
+
         // fetch instruction
         fetch(IR);
 
@@ -214,7 +220,25 @@ int base(int l, int base)
     return bl;
 }
 
-void print()
+void printRun()
 {
-    
+    if(init)
+    {
+        printf("              \t\t\t gp \t pc \t bp \t sp \t data \t\t stack \n");
+        printf("InitialValues \t\t\t %d \t %d \t %d \t %d \t ", *GP, *PC, *BP, *SP);
+        printStack();
+    }
+    else
+    {
+
+    }
+}
+
+void printStack()
+{
+    for(int i = 0; i < 23; i++)
+    {
+        printf("%d ", DS[i]);
+    }
+    printf("\n");
 }

@@ -1,17 +1,51 @@
+              			 pc 	 bp 	 sp 		 stack
+InitialValues 			 2046448 	 2046496 	 2046592 		 N/A
 JMP 
+              			 pc 	 bp 	 sp 		 stack
+InitialValues 			 2046448 	 2046496 	 2046592 		 N/A
 JMP 
+              			 pc 	 bp 	 sp 		 stack
+InitialValues 			 2046448 	 2046496 	 2046592 		 N/A
 INC 
+              			 pc 	 bp 	 sp 		 stack
+InitialValues 			 2046448 	 2046496 	 2046592 		 N/A
 LIT 
+              			 pc 	 bp 	 sp 		 stack
+InitialValues 			 2046448 	 2046496 	 2046592 		 N/A
 STO 
+              			 pc 	 bp 	 sp 		 stack
+InitialValues 			 2046448 	 2046496 	 2046592 		 N/A
 LIT 
+              			 pc 	 bp 	 sp 		 stack
+InitialValues 			 2046448 	 2046496 	 2046592 		 N/A
 STO 
+              			 pc 	 bp 	 sp 		 stack
+InitialValues 			 2046448 	 2046496 	 2046592 		 N/A
 LIT 
+              			 pc 	 bp 	 sp 		 stack
+InitialValues 			 2046448 	 2046496 	 2046592 		 N/A
 STO 
+              			 pc 	 bp 	 sp 		 stack
+InitialValues 			 2046448 	 2046496 	 2046592 		 N/A
 RTN 
+              			 pc 	 bp 	 sp 		 stack
+InitialValues 			 2046448 	 2046496 	 2046592 		 N/A
 INC 
+              			 pc 	 bp 	 sp 		 stack
+InitialValues 			 2046448 	 2046496 	 2046592 		 N/A
 LIT 
+              			 pc 	 bp 	 sp 		 stack
+InitialValues 			 2046448 	 2046496 	 2046592 		 N/A
 STO 
+              			 pc 	 bp 	 sp 		 stack
+InitialValues 			 2046448 	 2046496 	 2046592 		 N/A
 LIT 
+              			 pc 	 bp 	 sp 		 stack
+InitialValues 			 2046448 	 2046496 	 2046592 		 N/A
 STO 
+              			 pc 	 bp 	 sp 		 stack
+InitialValues 			 2046448 	 2046496 	 2046592 		 N/A
 CAL 
+              			 pc 	 bp 	 sp 		 stack
+InitialValues 			 2046448 	 2046496 	 2046592 		 N/A
 SIO 3
