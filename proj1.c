@@ -1,52 +1,87 @@
-/* libararies */
+/* Libraries */
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
-
-/* definitions */
+/* Definitions */
 #define MAX_STACK_HEIGHT 23
 #define MAX_CODE_LENGTH  500
 #define MAX_LEXI_LEVELS  3
 
-
-/* registers & stack */
+/* Registers & Stack */
 int  * RF;                  // register file (0-7) 
 int  * PC;                  // program counter
 int  * BP;                  // base pointer
 int  * GP;                  // global pointer
 int  * SP;                  // stack pointer
-int *  DS;                  // datastack (0-22)
+int  * DS;                  // datastack (0-22)
 
-
-/* instruction register */
-typedef struct IR
+/* Instruction Register Struct*/
+typedef struct Instr
 {
     int op;                  // operation code
     int r;                   // register 
     int l;                   // lexicographical level
     int m;                   // modifier
-} IR;
+} Instr;
 
+/* Cycles*/
+void fetch(Instr * ir);
+void execute(Instr * ir);
 
-/* cycles */
-void fetch(IR * IR);
-void execute(IR * IR);
+/* Helpers */
+void    ERROR_StackOverflow();
+void    fileReader(int argc, char ** argv);
+void    initialize();
+int     base(int l, int base);
+void    printRun();
+void    printStack();
+int     halt = 1;
+int     init = 1;
+char *  operationName;
+FILE *  fp;
 
-
-/* helpers */
-int    base(int l, int base);
-void   printRun();
-void   printStack();
-int    halt = 1;
-int    init = 1;
-char * operationName;
-
-
-/* main driver */
-int main()
+/* Main Driver */
+void main(int argc, char ** argv)
 {
+    // read in instructions from text file
+    fileReader(argc, argv);
 
-    // allocate variables
+    // initialize registers & stack
+    initialize();
+
+    // create struct
+    Instr * ir = calloc(sizeof(Instr), MAX_CODE_LENGTH);
+
+    // fetch instructions
+    fetch(ir);
+
+    while(halt)
+    {
+        // print run
+        printRun();
+
+        // execute instructions
+        execute(ir);
+    }
+}
+
+void fileReader(int argc, char ** argv)
+{	
+	if(argc < 2)
+	{
+		printf("Error: No input file found. \n");
+        exit(1);
+	}
+		
+	if(argc >= 2)
+		fp = fopen(argv[1], "r");
+	else
+		fp = fopen(argv[0], "r");
+}
+
+void initialize()
+{
     DS    = calloc(sizeof(int), 23);
     RF    = calloc(sizeof(int), 8);
     PC    = calloc(sizeof(int), 1);
@@ -54,44 +89,32 @@ int main()
     GP    = calloc(sizeof(int), 1);
     SP    = calloc(sizeof(int), 1);
    
-    // initialize variables
-    *PC =  0;
-    *BP =  0;
-    *GP = -1;
-    *SP = MAX_STACK_HEIGHT;
+    *PC   =  0;
+    *BP   =  0;
+    *GP   = -1;
+    *SP   = MAX_STACK_HEIGHT;
+}
 
-    // allocate structs
-    IR * IR = calloc(sizeof(IR), 1);
+void fetch(Instr * ir)
+{
+    int op, r, l, m;
     
-    while(halt)
+    int i = 0;
+    while(fscanf(fp, "%d %d %d %d", &op, &r, &l, &m) != EOF)
     {
-        // print run
-        printRun();
-
-        // fetch instruction
-        fetch(IR);
-
-        // execute instruction
-        execute(IR);
+        ir[i].op = op;
+        ir[i].r = r;
+        ir[i].l = l;
+        ir[i].m = m;
+        i++;
     }
-
-    return EXIT_SUCCESS;
+    fclose(fp);
 }
 
-
-void fetch(IR * IR)
+void execute(Instr * ir)
 {
-    scanf("%d", &IR->op);
-    scanf("%d", &IR->r);
-    scanf("%d", &IR->l);
-    scanf("%d", &IR->m);
-    return;
-}
-
-
-void execute(IR * IR)
-{
-    switch(IR->op)
+    Instr IR = ir[*PC];
+    switch(IR.op)
     {
         case 1:         
             operationName = "LIT";
@@ -101,6 +124,10 @@ void execute(IR * IR)
             break;      
         case 3:         
             operationName = "LOD";
+            if(base(IR.l, *BP) == 0)
+                RF[IR.r] = DS[base(IR.l, *BP) + IR.m];
+            else
+                RF[IR.r] = DS[base(IR.l, *BP) - IR.m];
             break;
         case 4:         
             operationName = "STO";
@@ -110,27 +137,29 @@ void execute(IR * IR)
             break;
         case 6:         
             operationName = "INC";
+            if(*SP - IR.m <= *GP) 
+                ERROR_StackOverflow();
+            if(*BP == 0)
+                *GP = *GP + IR.m;
+            else
+                *SP = *SP - IR.m;
             break;
         case 7:         
             operationName = "JMP";
+            *PC = IR.m;
             break;
         case 8:         
             operationName = "JPC";
             break;
         case 9:          
             operationName = "SIO";
-            if(IR->m == 1)
-                //
             break;
         case 10:         
             operationName = "SIO";
-            if(IR->m == 2)
-                //
             break;
         case 11:         
             operationName = "SIO";
-            if(IR->m == 3)
-                halt = 0;       
+            halt = 0;     
             break;
         case 12:        
             operationName = "NEG";
@@ -171,13 +200,9 @@ void execute(IR * IR)
         case 24:
             operationName = "GEQ";
             break;
-        default:
-            break;
     }
 
-    return;
 }
-
 
 int base(int l, int base)
 {
@@ -215,4 +240,10 @@ void printStack()
         printf("%d ", DS[i]);
     }
     printf("\n");
+}
+
+void ERROR_StackOverflow()
+{
+    printf("Error: Stack Overflow. \n");
+    exit(1);
 }
