@@ -27,7 +27,7 @@ typedef struct Instr
 
 /* Cycles*/
 void fetch(Instr * ir);
-void execute(Instr * ir);
+void execute(Instr ir);
 
 /* Helpers */
 void    updatePC();
@@ -37,7 +37,7 @@ void    fileReader(int argc, char ** argv);
 void    initialize();
 int     base(int l, int base);
 void    printInstructions(Instr * ir);
-void    printRun(Instr * ir);
+void    printRun(Instr ir);
 void    printStack();
 void    printRegisterFile();
 int     halt   = 1;
@@ -68,9 +68,10 @@ void main(int argc, char ** argv)
     // execute instructions
     while(halt)
     {
-        printRun(ir);
-        execute(ir);
-        updatePC();
+        Instr IR = ir[*PC];
+        printRun(IR);
+        execute(IR);
+        //updatePC();
     }
 }
 
@@ -120,9 +121,9 @@ void fetch(Instr * ir)
     fclose(fp);
 }
 
-void execute(Instr * ir)
+void execute(Instr IR)
 {
-    Instr IR = ir[*PC];
+    *PC = *PC + 1;
     getOperationName(IR.op);
 
     switch(IR.op)
@@ -345,14 +346,14 @@ void printInstructions(Instr * ir)
     printf("\n");
 }
 
-void printRun(Instr * ir)
+void printRun(Instr IR)
 {
-    Instr IR = ir[*PC];
     if(init)
     {
         printf("              \t\t\t gp \t pc \t bp \t sp \t data \t\t stack \n");
         printf("InitialValues \t\t\t %d \t %d \t %d \t %d \t ", *GP, *PC, *BP, *SP);
         printStack();
+        printRegisterFile();
         printf("\n");
         init = 0;
     }
