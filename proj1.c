@@ -30,16 +30,19 @@ void fetch(Instr * ir);
 void execute(Instr * ir);
 
 /* Helpers */
+void    getOperationName(int op);
 void    ERROR_StackOverflow();
 void    fileReader(int argc, char ** argv);
 void    initialize();
 int     base(int l, int base);
+void    printInstructions(Instr * ir);
 void    printRun();
 void    printStack();
 int     halt = 1;
 int     init = 1;
 char *  operationName;
 FILE *  fp;
+int     count;
 
 /* Main Driver */
 void main(int argc, char ** argv)
@@ -56,12 +59,13 @@ void main(int argc, char ** argv)
     // fetch instructions
     fetch(ir);
 
+    // print out instructions
+    printInstructions(ir);
+
+    // execute instructions
     while(halt)
     {
-        // print run
         printRun();
-
-        // execute instructions
         execute(ir);
     }
 }
@@ -107,6 +111,7 @@ void fetch(Instr * ir)
         ir[i].l = l;
         ir[i].m = m;
         i++;
+        count++;
     }
     fclose(fp);
 }
@@ -117,26 +122,20 @@ void execute(Instr * ir)
     switch(IR.op)
     {
         case 1:         
-            operationName = "LIT";
             break;
         case 2:         
-            operationName = "RTN";
             break;      
         case 3:         
-            operationName = "LOD";
             if(base(IR.l, *BP) == 0)
                 RF[IR.r] = DS[base(IR.l, *BP) + IR.m];
             else
                 RF[IR.r] = DS[base(IR.l, *BP) - IR.m];
             break;
         case 4:         
-            operationName = "STO";
             break;
         case 5:         
-            operationName = "CAL";
             break;
         case 6:         
-            operationName = "INC";
             if(*SP - IR.m <= *GP) 
                 ERROR_StackOverflow();
             if(*BP == 0)
@@ -145,60 +144,42 @@ void execute(Instr * ir)
                 *SP = *SP - IR.m;
             break;
         case 7:         
-            operationName = "JMP";
             *PC = IR.m;
             break;
         case 8:         
-            operationName = "JPC";
             break;
         case 9:          
-            operationName = "SIO";
             break;
         case 10:         
-            operationName = "SIO";
             break;
         case 11:         
-            operationName = "SIO";
             halt = 0;     
             break;
         case 12:        
-            operationName = "NEG";
             break;
         case 13:        
-            operationName = "ADD";
             break;
         case 14:        
-            operationName = "SUB";
             break;
         case 15:        
-            operationName = "MUL";
             break;
         case 16:        
-            operationName = "DIV";
             break;
         case 17:        
-            operationName = "ODD";
             break;
         case 18:        
-            operationName = "MOD";
             break;
         case 19:        
-            operationName = "EQL";
             break;
         case 20:        
-            operationName = "NEQ";
             break;
         case 21:        
-            operationName = "LSS";
             break;
         case 22:
-            operationName = "LEQ";
             break;
         case 23:  
-            operationName = "GTR";
             break;
         case 24:
-            operationName = "GEQ";
             break;
     }
 
@@ -215,6 +196,100 @@ int base(int l, int base)
         l--;
     }
     return bl;
+}
+
+void getOperationName(int op)
+{
+    switch(op)
+    {
+        case 1:         
+            operationName = "lit";
+            break;
+        case 2:         
+            operationName = "rtn";
+            break;
+        case 3:         
+            operationName = "lod";
+            break;
+        case 4:         
+            operationName = "sto";
+            break;
+        case 5:         
+            operationName = "cal";
+            break;
+        case 6:         
+            operationName = "inc";
+            break;
+        case 7:         
+            operationName = "jmp";
+            break;
+        case 8:         
+            operationName = "jpc";
+            break;
+        case 9:          
+            operationName = "sio";
+            break;
+        case 10:         
+            operationName = "sio";
+            break;
+        case 11:         
+            operationName = "sio";
+            break;
+        case 12:        
+            operationName = "neg";
+            break;
+        case 13:        
+            operationName = "add";
+            break;
+        case 14:        
+            operationName = "sub";
+            break;
+        case 15:        
+            operationName = "mul";
+            break;
+        case 16:        
+            operationName = "div";
+            break;
+        case 17:        
+            operationName = "odd";
+            break;
+        case 18:        
+            operationName = "mod";
+            break;
+        case 19:        
+            operationName = "eql";
+            break;
+        case 20:        
+            operationName = "neq";
+            break;
+        case 21:        
+            operationName = "lss";
+            break;
+        case 22:
+            operationName = "leq";
+            break;
+        case 23:  
+            operationName = "gtr";
+            break;
+        case 24:
+            operationName = "geq";
+            break;
+    }
+}
+
+void printInstructions(Instr * ir)
+{
+    printf("\nLine\tOP\tR\tL\tM\n");
+    for(int i = 0; i < count; i++)
+    {
+        int op = ir[i].op;
+        int r = ir[i].r;
+        int l = ir[i].l;
+        int m = ir[i].m;
+        getOperationName(op);
+        printf("%d\t%s\t%d\t%d\t%d\n", i, operationName, r, l, m);
+    }
+    printf("\n");
 }
 
 void printRun()
