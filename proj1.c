@@ -30,16 +30,19 @@ void fetch(Instr * ir);
 void execute(Instr * ir);
 
 /* Helpers */
+void    updatePC();
 void    getOperationName(int op);
 void    ERROR_StackOverflow();
 void    fileReader(int argc, char ** argv);
 void    initialize();
 int     base(int l, int base);
 void    printInstructions(Instr * ir);
-void    printRun();
+void    printRun(Instr * ir);
 void    printStack();
-int     halt = 1;
-int     init = 1;
+void    printRegisterFile();
+int     halt   = 1;
+int     init   = 1;
+int     update = 1;
 char *  operationName;
 FILE *  fp;
 int     count;
@@ -65,8 +68,9 @@ void main(int argc, char ** argv)
     // execute instructions
     while(halt)
     {
-        printRun();
+        printRun(ir);
         execute(ir);
+        updatePC();
     }
 }
 
@@ -119,11 +123,18 @@ void fetch(Instr * ir)
 void execute(Instr * ir)
 {
     Instr IR = ir[*PC];
+    getOperationName(IR.op);
+
     switch(IR.op)
     {
-        case 1:         
+        case 1:
+            RF[IR.r] = IR.m;
             break;
-        case 2:         
+        case 2:
+            *SP = *BP + 1;
+            *BP = DS[*SP - 3];
+            *PC = DS[*SP - 4];
+            //update = 0;         
             break;      
         case 3:         
             if(base(IR.l, *BP) == 0)
@@ -131,9 +142,22 @@ void execute(Instr * ir)
             else
                 RF[IR.r] = DS[base(IR.l, *BP) - IR.m];
             break;
-        case 4:         
+        case 4:
+            if(base(IR.l, *BP) == 0)
+                DS[base(IR.l, *BP) + IR.m] = RF[IR.r];
+            else
+                DS[base(IR.l, *BP) - IR.m] = RF[IR.r];
             break;
-        case 5:         
+        case 5:
+            if(*SP - 4 <= *GP)
+                ERROR_StackOverflow();
+            DS[*SP - 1] = 0;
+            DS[*SP - 2] = base(IR.l, *BP);
+            DS[*SP - 3] = *BP;
+            DS[*SP - 4] = *PC;
+            *BP = *SP - 1;
+            *PC = IR.m;
+            //update = 0;         
             break;
         case 6:         
             if(*SP - IR.m <= *GP) 
@@ -145,44 +169,73 @@ void execute(Instr * ir)
             break;
         case 7:         
             *PC = IR.m;
+            //update = 0; // look at this line for debugging...
             break;
-        case 8:         
+        case 8:
+            if(RF[IR.r] == 0)
+            {
+                *PC = IR.m;
+                //update = 0;
+            }
             break;
-        case 9:          
+        case 9:
+            printf("%d", RF[IR.r]);
             break;
-        case 10:         
+        case 10:
+            scanf("%d", &RF[IR.r]);
             break;
         case 11:         
             halt = 0;     
             break;
-        case 12:        
+        case 12:
+            RF[IR.r] = -RF[IR.l];
             break;
-        case 13:        
+        case 13:
+            RF[IR.r] = RF[IR.l] + RF[IR.m];
             break;
-        case 14:        
+        case 14:
+            RF[IR.r] = RF[IR.l] - RF[IR.m];
             break;
-        case 15:        
+        case 15:
+            RF[IR.r] = RF[IR.l] * RF[IR.m];
             break;
-        case 16:        
+        case 16:
+            RF[IR.r] = RF[IR.l] / RF[IR.m];
             break;
-        case 17:        
+        case 17:
+            RF[IR.r] = RF[IR.r] % 2;
             break;
-        case 18:        
+        case 18:
+            RF[IR.r] = RF[IR.l] % RF[IR.m];
             break;
-        case 19:        
+        case 19:
+            RF[IR.r] = (RF[IR.l] == RF[IR.m]) ? 1 : 0;
             break;
-        case 20:        
+        case 20:
+            RF[IR.r] = (RF[IR.l] != RF[IR.m]) ? 1 : 0;
             break;
-        case 21:        
+        case 21:
+            RF[IR.r] = (RF[IR.l] < RF[IR.m]) ? 1 : 0;
             break;
         case 22:
+            RF[IR.r] = (RF[IR.l] <= RF[IR.m]) ? 1 : 0;
             break;
-        case 23:  
+        case 23:
+            RF[IR.r] = (RF[IR.l] > RF[IR.m]) ? 1 : 0;
             break;
         case 24:
+            RF[IR.r] = (RF[IR.l] >= RF[IR.m]) ? 1 : 0;
             break;
     }
 
+}
+
+void updatePC()
+{
+    if(update)
+    {
+        *PC = *PC + 1;
+    }
 }
 
 int base(int l, int base)
@@ -292,19 +345,22 @@ void printInstructions(Instr * ir)
     printf("\n");
 }
 
-void printRun()
+void printRun(Instr * ir)
 {
+    Instr IR = ir[*PC];
     if(init)
     {
         printf("              \t\t\t gp \t pc \t bp \t sp \t data \t\t stack \n");
         printf("InitialValues \t\t\t %d \t %d \t %d \t %d \t ", *GP, *PC, *BP, *SP);
         printStack();
+        printf("\n");
         init = 0;
     }
     else
     {
-        // TODO
-        printf("%s\n", operationName);
+        printf("%d %s %d %d %d \t\t\t %d \t %d \t %d \t %d \t ", *PC, operationName, IR.r, IR.l, IR.m, *GP, *PC, *BP, *SP);
+        printStack();
+        printRegisterFile();
     }
 }
 
@@ -315,6 +371,16 @@ void printStack()
         printf("%d ", DS[i]);
     }
     printf("\n");
+}
+
+void printRegisterFile()
+{
+    printf("RF: ");
+    for(int i = 0; i < 8; i++)
+    {
+        printf("%d ", RF[i]);
+    }
+    printf("\n\n");
 }
 
 void ERROR_StackOverflow()
