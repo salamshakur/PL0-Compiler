@@ -13,7 +13,6 @@ int    bp;   // base pointer
 int    gp;   // global pointer
 int    sp;   // stack pointer
 int    hlt;  // halt flag
-int    ini;  // init flag
 
 typedef struct instr
 {
@@ -167,7 +166,6 @@ void initialize()
     pc  =  0;
     bp  =  0;
     hlt =  1;
-    ini =  1;
 }
 
 void printRun(instr ir)
