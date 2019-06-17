@@ -1,6 +1,3 @@
-#include <stdio.h>
-#include <stdlib.h>
-
 #define MAX_STACK_HEIGHT 23
 #define MAX_CODE_LENGTH  500
 #define MAX_LEXI_LEVELS  3
@@ -22,6 +19,7 @@ typedef struct instr
     int m;   // modifier
 } instr;
 
+void    beginVM(int argc, char ** argv);
 instr * fetch();
 char  * getOperationName(int op);
 void    fileReader(int argc, char ** argv);
@@ -34,7 +32,7 @@ void    printRegisters();
 int     base(int l, int base);
 void    ERROR_StackOverflow();
 
-void main(int argc, char ** argv)
+void beginVM(int argc, char ** argv)
 {
     fileReader(argc, argv);
     initialize();
