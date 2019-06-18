@@ -1,8 +1,13 @@
+#ifndef _GENERIC_H_
+#define _GENERIC_H_
+    #include <stdio.h>
+    #include <stdlib.h>
+#endif
+
 #define MAX_STACK_HEIGHT 23
 #define MAX_CODE_LENGTH  500
 #define MAX_LEXI_LEVELS  3
 
-FILE * fp;   // file pointer
 int  * ds;   // datastack
 int  * rf;   // register file
 int    pc;   // program counter
@@ -19,10 +24,9 @@ typedef struct instr
     int m;   // modifier
 } instr;
 
-void    beginVM(int argc, char ** argv);
-instr * fetch();
+void    beginVM(FILE * fp);
+instr * fetch(FILE * fp);
 char  * getOperationName(int op);
-void    fileReader(int argc, char ** argv);
 void    initialize();
 void    execute(instr ir);
 void    printInstructions(int n, instr * ir);
@@ -32,11 +36,10 @@ void    printRegisters();
 int     base(int l, int base);
 void    ERROR_StackOverflow();
 
-void beginVM(int argc, char ** argv)
+void beginVM(FILE * fp)
 {
-    fileReader(argc, argv);
     initialize();
-    instr * ir = fetch();
+    instr * ir = fetch(fp);
 
     while(hlt)
     {
@@ -47,21 +50,7 @@ void beginVM(int argc, char ** argv)
     }
 }
 
-void fileReader(int argc, char ** argv)
-{
-    if(argc < 2)
-    {
-        printf("Error: No input file found.\n");
-        exit(1);
-    }
-
-    if(argc >= 2)
-        fp = fopen(argv[1], "r");
-    else
-        fp = fopen(argv[0], "r");
-}
-
-instr * fetch()
+instr * fetch(FILE * fp)
 {
     int op, r, l, m;
     instr * ir = calloc(sizeof(instr), MAX_CODE_LENGTH);
