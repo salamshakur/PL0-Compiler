@@ -2,6 +2,8 @@
 #define _GENERIC_H_
     #include <stdio.h>
     #include <stdlib.h>
+    #include <string.h>
+    #include <ctype.h>
 #endif
 
 #include "../Virtual Machine/vm.c"
@@ -12,7 +14,7 @@ void main(int argc, char ** argv)
 {
     FILE * fp = fileReader(argc, argv);
 
-    beginVM(fp);
+    //beginVM(fp);
     beginLEX(fp);
 }
 
