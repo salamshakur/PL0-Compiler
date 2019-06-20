@@ -53,61 +53,7 @@ void printSource(FILE * fp)
 
 void scanner(FILE * fp)
 {
-    char c;
-    int i = 0;
-    int j = 0;
-    int count = 100;
-    char name[maxChar];
-    token * tkList = malloc(sizeof(token) * count);
-
-    while(!feof(fp))
-    {
-        memset(name, 0, sizeof(name));
-        c = fgetc(fp);
-
-        if(c == EOF)
-            break;
-
-        if(isspace(c))
-            continue;
-        
-        if(isalpha(c))
-        {
-            name[i] = c;
-            i++;
-            c = fgetc(fp);
-
-            // if(!isalpha(c) || !isdigit(c) || !isspace(c))
-            // {
-            //     token tk;
-            //     strcpy(tk.name, name);
-            //     tk.tokenType = isSpecial(c);
-            //     tkList[j] = tk;
-            //     i = 0;
-            //     j++;
-            // }
-            // else
-            // {
-                while(isalpha(c) || isdigit(c))
-                {
-                    name[i] = c;
-                    i++;
-                    c = fgetc(fp);
-                }
-
-                token tk;
-                strcpy(tk.name, name);
-                tk.tokenType = isReserved(tk.name);
-                tkList[j] = tk;
-                i = 0;
-                j++;
-            // }
-        } 
-        
-        // for testing
-        for(int n = 0; n < j; n++)
-            printf("token -> %s \t type -> %d\n", tkList[n].name, tkList[n].tokenType);
-    }
+    
 }
 
 int isReserved(char name[maxChar])
