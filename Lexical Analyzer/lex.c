@@ -28,6 +28,7 @@ typedef struct token
 void printSource(FILE * fp);
 void scanner(FILE * fp);
 int  isReserved(char * name);
+int  isSpecial(char c);
 
 void beginLEX(FILE * fp)
 {
@@ -76,24 +77,36 @@ void scanner(FILE * fp)
             i++;
             c = fgetc(fp);
 
-            while(isalpha(c) || isdigit(c))
-            {
-                name[i] = c;
-                i++;
-                c = fgetc(fp);
-            }
+            // if(!isalpha(c) || !isdigit(c) || !isspace(c))
+            // {
+            //     token tk;
+            //     strcpy(tk.name, name);
+            //     tk.tokenType = isSpecial(c);
+            //     tkList[j] = tk;
+            //     i = 0;
+            //     j++;
+            // }
+            // else
+            // {
+                while(isalpha(c) || isdigit(c))
+                {
+                    name[i] = c;
+                    i++;
+                    c = fgetc(fp);
+                }
 
-            token tk;
-            strcpy(tk.name, name);
-            tk.tokenType = isReserved(tk.name);
-            tkList[j] = tk;
-            i = 0;
-            j++;
+                token tk;
+                strcpy(tk.name, name);
+                tk.tokenType = isReserved(tk.name);
+                tkList[j] = tk;
+                i = 0;
+                j++;
+            // }
         } 
         
         // for testing
-        // for(int n = 0; n < j; n++)
-        //     printf("token -> %s \t type -> %d\n", tkList[n].name, tkList[n].tokenType);
+        for(int n = 0; n < j; n++)
+            printf("token -> %s \t type -> %d\n", tkList[n].name, tkList[n].tokenType);
     }
 }
 
@@ -113,4 +126,27 @@ int isReserved(char name[maxChar])
     if (strcmp(name, "read")      == 0) return readsym;
     if (strcmp(name, "write")     == 0) return writesym;
     return identsym;
+}
+
+int isSpecial(char c)
+{
+    // TODO: add nested if for => <= etc...
+    // -1 is invalid
+    // * should be lead by /
+    // = should follow other symbols or :
+    // remember these and fix it...
+    if (c == '+') return plussym;
+    if (c == '-') return minussym;
+    if (c == '*') return -1;
+    if (c == '/') return slashsym;
+    if (c == '(') return lparentsym;
+    if (c == ')') return rparentsym;
+    if (c == '=') return eqsym;
+    if (c == ',') return commasym;
+    if (c == '.') return periodsym;
+    if (c == '<') return lessym;
+    if (c == '>') return gtrsym;
+    if (c == ';') return semicolonsym;
+    if (c == ':') return -1;
+    return -1;
 }
