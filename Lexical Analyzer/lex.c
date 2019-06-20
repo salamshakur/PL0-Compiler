@@ -6,7 +6,7 @@
     #include <ctype.h>
 #endif
 
-#define maxChar 11
+#define maxChar 11 + 1
 #define maxInt  5
 
 typedef enum 
@@ -21,12 +21,13 @@ typedef enum
 
 typedef struct token 
 {
-    char name[maxChar + 1];
+    char name[maxChar];
     int tokenType;    
 } token;
 
 void printSource(FILE * fp);
 void scanner(FILE * fp);
+int  isReserved(char * name);
 
 void beginLEX(FILE * fp)
 {
@@ -84,12 +85,32 @@ void scanner(FILE * fp)
 
             token tk;
             strcpy(tk.name, name);
-            //tk.tokenType = ?;
+            tk.tokenType = isReserved(tk.name);
             tkList[j] = tk;
             i = 0;
             j++;
         } 
         
-          
+        // for testing
+        // for(int n = 0; n < j; n++)
+        //     printf("token -> %s \t type -> %d\n", tkList[n].name, tkList[n].tokenType);
     }
-}   
+}
+
+int isReserved(char name[maxChar])
+{
+    if (strcmp(name, "const")     == 0) return constsym;
+    if (strcmp(name, "var")       == 0) return varsym;
+    if (strcmp(name, "procedure") == 0) return procsym;
+    if (strcmp(name, "call")      == 0) return callsym;
+    if (strcmp(name, "begin")     == 0) return beginsym;
+    if (strcmp(name, "end")       == 0) return endsym;
+    if (strcmp(name, "if")        == 0) return ifsym;
+    if (strcmp(name, "then")      == 0) return thensym;
+    if (strcmp(name, "else")      == 0) return elsesym;
+    if (strcmp(name, "while")     == 0) return whilesym;
+    if (strcmp(name, "do")        == 0) return dosym;
+    if (strcmp(name, "read")      == 0) return readsym;
+    if (strcmp(name, "write")     == 0) return writesym;
+    return identsym;
+}
