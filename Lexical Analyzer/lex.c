@@ -1,4 +1,4 @@
-// test
+// test 2
 #ifndef _GENERIC_H_
 #define _GENERIC_H_
     #include <stdio.h>
