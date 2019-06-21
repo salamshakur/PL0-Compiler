@@ -6,7 +6,7 @@
     #include <ctype.h>
 #endif
 
-#define maxChar 11 + 1
+#define maxChar 11
 #define maxInt  5
 
 typedef enum 
@@ -21,14 +21,14 @@ typedef enum
 
 typedef struct token 
 {
-    char name[maxChar];
+    char name[maxChar + 1];
     int tokenType;    
 } token;
 
 void printSource(FILE * fp);
 void scanner(FILE * fp);
-int  isReserved(char * name);
-int  isSpecial(char c);
+int  getReserved(char * name);
+int  getSpecial(char c);
 
 void beginLEX(FILE * fp)
 {
@@ -39,9 +39,8 @@ void beginLEX(FILE * fp)
 
 void printSource(FILE * fp)
 {
-    printf("\nSource Program: \n");
-
     char c;
+    printf("\nSource Program: \n");
     while(!feof(fp))
     {
         c = fgetc(fp);
@@ -49,68 +48,71 @@ void printSource(FILE * fp)
         if(c != EOF)
             printf("%c", c);
     }
+    printf("\n");
 }
 
 void scanner(FILE * fp)
 {
-    char c;
-    int i = 0;
-    int j = 0;
-    int count = 100;
-    char name[maxChar];
-    token * tkList = malloc(sizeof(token) * count);
+    char    c;
+    int     countId  = 0;
+    int     countNum = 0;
+    int     countTB  = 0;
+    char    tempID[maxChar + 1];
+    char    tempNum[maxInt + 1];
+    token * table = malloc(sizeof(token) * 1000);
+
 
     while(!feof(fp))
     {
-        memset(name, 0, sizeof(name));
         c = fgetc(fp);
 
-        if(c == EOF)
-            break;
-
-        if(isspace(c))
-            continue;
-        
         if(isalpha(c))
         {
-            name[i] = c;
-            i++;
-            c = fgetc(fp);
+            //printf("letter found! -> %c \n", c); // test
+            while((isalpha(c) || isdigit(c)) && !ispunct(c) && countId <= maxChar)
+            {
+                tempID[countId] = c;
+                countId++;
+                c = fgetc(fp);
+            }
+            tempID[countId] = '\0';
 
-            // if(!isalpha(c) || !isdigit(c) || !isspace(c))
-            // {
-            //     token tk;
-            //     strcpy(tk.name, name);
-            //     tk.tokenType = isSpecial(c);
-            //     tkList[j] = tk;
-            //     i = 0;
-            //     j++;
-            // }
-            // else
-            // {
-                while(isalpha(c) || isdigit(c))
-                {
-                    name[i] = c;
-                    i++;
-                    c = fgetc(fp);
-                }
+            token tk;
+            strcpy(tk.name, tempID);
+            tk.tokenType = getReserved(tk.name);
+            table[countTB] = tk;
+            //printf("token -> %s \n", table[countTB].name); // test
+            memset(tempID, 0, sizeof(tempID));
+            countId = 0;
+            countTB++;
 
-                token tk;
-                strcpy(tk.name, name);
-                tk.tokenType = isReserved(tk.name);
-                tkList[j] = tk;
-                i = 0;
-                j++;
+            continue;
+        }
+
+        if(isdigit(c))
+        {
+            //printf("digit found! -> %c \n", c); // test
+            // while(isdigit(c) && countNum <= maxInt)
+            // {
+            //     tempNum[countNum] = c;
+            //     countNum++;
+            //     c = fgetc(fp);
             // }
-        } 
-        
-        // for testing
-        for(int n = 0; n < j; n++)
-            printf("token -> %s \t type -> %d\n", tkList[n].name, tkList[n].tokenType);
+            
+            // tempNum[countNum] = '\0';
+            // printf("%s\n", tempName);
+            continue;
+        }
+
+        if(ispunct(c))
+        {
+            //printf("special found! -> %c \n", c); // test
+            continue;
+        }
     }
 }
 
-int isReserved(char name[maxChar])
+int getReserved(char name[maxChar])
 {
     if (strcmp(name, "const")     == 0) return constsym;
     if (strcmp(name, "var")       == 0) return varsym;
@@ -128,7 +130,7 @@ int isReserved(char name[maxChar])
     return identsym;
 }
 
-int isSpecial(char c)
+int getSpecial(char c)
 {
     // TODO: add nested if for => <= etc...
     // -1 is invalid
