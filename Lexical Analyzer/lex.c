@@ -167,9 +167,6 @@ int getReserved(char name[maxChar])
 
 int getSpecial(char name[maxSym])
 {
-    // TODO:
-    // implement look ahead, to capture >=, <=, :=, /* */ symbols
-    // throw error if invalid
     if (strcmp(name, "+")  == 0) return plussym;
     if (strcmp(name, "-")  == 0) return minussym;
     if (strcmp(name, "*")  == 0) return multsym;
@@ -182,8 +179,7 @@ int getSpecial(char name[maxSym])
     if (strcmp(name, "<")  == 0) return lessym;
     if (strcmp(name, ">")  == 0) return gtrsym;
     if (strcmp(name, ";")  == 0) return semicolonsym;
-    if (strcmp(name, ":")  == 0) return -1;
-    return -1;
+    error(4);
 }
 
 void printTable(table * lexemes)
@@ -206,10 +202,9 @@ void printList(table * lexemes)
     {
         token tk = lexemes->arr[i];
         if(tk.tokenType == identsym || tk.tokenType == numbersym)
-        {
             printf("%d %s ", tk.tokenType, tk.name);
-        }
-        printf("%d ", tk.tokenType);
+        else
+            printf("%d ", tk.tokenType);
     }
     printf("\n");
 }
