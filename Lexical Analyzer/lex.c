@@ -25,16 +25,24 @@ typedef struct token
     int tokenType;    
 } token;
 
-void printSource(FILE * fp);
-void scanner(FILE * fp);
-int  getReserved(char * name);
-int  getSpecial(char c);
+typedef struct table
+{
+    struct token;
+    int    size;
+} table;
+
+void    printSource(FILE * fp);
+token * scanner(FILE * fp);
+int     getReserved(char * name);
+int     getSpecial(char c);
+void    printTable(token * table);
 
 void beginLEX(FILE * fp)
 {
     printSource(fp);
     rewind(fp);
-    scanner(fp);
+    token * table = scanner(fp);
+    printTable(table);
 }
 
 void printSource(FILE * fp)
@@ -51,7 +59,7 @@ void printSource(FILE * fp)
     printf("\n");
 }
 
-void scanner(FILE * fp)
+token * scanner(FILE * fp)
 {
     char    c;
     int     countId  = 0;
@@ -59,7 +67,7 @@ void scanner(FILE * fp)
     int     countTB  = 0;
     char    tempID[maxChar + 1];
     char    tempNum[maxInt + 1];
-    token * table = malloc(sizeof(token) * 1000);
+    token * table = malloc(sizeof(token) * 3000);
 
 
     while(!feof(fp))
@@ -69,7 +77,7 @@ void scanner(FILE * fp)
         if(isalpha(c))
         {
             //printf("letter found! -> %c \n", c); // test
-            while((isalpha(c) || isdigit(c)) && !ispunct(c) && countId <= maxChar)
+            while((isalnum(c)) && !ispunct(c) && countId <= maxChar)
             {
                 tempID[countId] = c;
                 countId++;
@@ -81,7 +89,7 @@ void scanner(FILE * fp)
             strcpy(tk.name, tempID);
             tk.tokenType = getReserved(tk.name);
             table[countTB] = tk;
-            //printf("token -> %s \n", table[countTB].name); // test
+            printf("token -> %s \n", table[countTB].name); // test
             memset(tempID, 0, sizeof(tempID));
             countId = 0;
             countTB++;
@@ -92,15 +100,23 @@ void scanner(FILE * fp)
         if(isdigit(c))
         {
             //printf("digit found! -> %c \n", c); // test
-            // while(isdigit(c) && countNum <= maxInt)
-            // {
-            //     tempNum[countNum] = c;
-            //     countNum++;
-            //     c = fgetc(fp);
-            // }
+            while(isdigit(c) && !ispunct(c) && countNum <= maxInt)
+            {
+                tempNum[countNum] = c;
+                countNum++;
+                c = fgetc(fp);
+            }
+            tempNum[countNum] = '\0';
+
+            token tk;
+            strcpy(tk.name, tempNum);
+            tk.tokenType = numbersym;
+            table[countTB] = tk;
+            printf("token -> %s \n", table[countTB].name); // test
+            memset(tempNum, 0, sizeof(tempNum));
+            countNum = 0;
+            countTB++;
             
-            // tempNum[countNum] = '\0';
-            // printf("%s\n", tempName);
             continue;
         }
 
@@ -110,6 +126,8 @@ void scanner(FILE * fp)
             continue;
         }
     }
+
+    return table;
 }
 
 int getReserved(char name[maxChar])
@@ -151,4 +169,9 @@ int getSpecial(char c)
     if (c == ';') return semicolonsym;
     if (c == ':') return -1;
     return -1;
+}
+
+void printTable(token * table)
+{
+
 }
