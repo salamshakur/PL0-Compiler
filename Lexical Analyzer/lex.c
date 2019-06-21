@@ -172,6 +172,8 @@ int getSpecial(char c)
 
 void printTable(table * lexemes)
 {
+    printf("Lexeme Table: \n");
+    printf("lexeme \t token type \n");
     int j = lexemes->size;
     for(int i = 0; i < j; i++)
     {
