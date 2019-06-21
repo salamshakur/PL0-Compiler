@@ -37,7 +37,7 @@ int     getReserved(char * name);
 int     getSpecial(char c);
 void    printTable(table * lexemes);
 void    printList(table * lexemes);
-void    error();
+void    error(int val);
 
 void beginLEX(FILE * fp)
 {
@@ -83,7 +83,7 @@ table * scanner(FILE * fp)
             while((isalnum(c)) && !ispunct(c))
             {   
                 if(countId >= maxChar)
-                    error();
+                    error(3);
                 tempID[countId] = c;
                 countId++;
                 c = fgetc(fp);
@@ -104,8 +104,10 @@ table * scanner(FILE * fp)
 
         if(isdigit(c))
         {
-            while(isdigit(c) && !ispunct(c) && countNum <= maxInt)
+            while(isdigit(c) && !ispunct(c))
             {
+                if(countNum >= maxInt)
+                    error(2);
                 tempNum[countNum] = c;
                 countNum++;
                 c = fgetc(fp);
@@ -203,8 +205,16 @@ void printList(table * lexemes)
     printf("\n");
 }
 
-void error()
+void error(int val)
 {
-    printf("error hit! \n");
+    char * message;
+    switch(val)
+    {
+        case 1: message = "Variable des not start with letter.";  break;
+        case 2: message = "Number too long."; break;
+        case 3: message = "Name too long."; break;
+        case 4: message = "Invalid symbols."; break;
+    }
+    printf("error hit! %s \n", message);
     exit(1);
 }
