@@ -27,22 +27,22 @@ typedef struct token
 
 typedef struct table
 {
-    struct token;
-    int    size;
+    struct token * arr;
+    int size;
 } table;
 
 void    printSource(FILE * fp);
-token * scanner(FILE * fp);
+table * scanner(FILE * fp);
 int     getReserved(char * name);
 int     getSpecial(char c);
-void    printTable(token * table);
+void    printTable(table * lexemes);
 
 void beginLEX(FILE * fp)
 {
     printSource(fp);
     rewind(fp);
-    token * table = scanner(fp);
-    printTable(table);
+    table * lexemes = scanner(fp);
+    printTable(lexemes);
 }
 
 void printSource(FILE * fp)
@@ -59,16 +59,17 @@ void printSource(FILE * fp)
     printf("\n");
 }
 
-token * scanner(FILE * fp)
+table * scanner(FILE * fp)
 {
     char    c;
     int     countId  = 0;
     int     countNum = 0;
-    int     countTB  = 0;
+    int     countTb  = 0;
     char    tempID[maxChar + 1];
     char    tempNum[maxInt + 1];
-    token * table = malloc(sizeof(token) * 3000);
-
+    table * lexemes = malloc(sizeof(table));
+    token * arr = malloc(sizeof(token) * 3000);
+    lexemes->arr = arr;
 
     while(!feof(fp))
     {
@@ -76,7 +77,6 @@ token * scanner(FILE * fp)
 
         if(isalpha(c))
         {
-            //printf("letter found! -> %c \n", c); // test
             while((isalnum(c)) && !ispunct(c) && countId <= maxChar)
             {
                 tempID[countId] = c;
@@ -88,18 +88,17 @@ token * scanner(FILE * fp)
             token tk;
             strcpy(tk.name, tempID);
             tk.tokenType = getReserved(tk.name);
-            table[countTB] = tk;
-            printf("token -> %s \n", table[countTB].name); // test
+            lexemes->arr[countTb] = tk;
+            lexemes->size = countTb + 1;
             memset(tempID, 0, sizeof(tempID));
             countId = 0;
-            countTB++;
-
+            countTb++;
+            
             continue;
         }
 
         if(isdigit(c))
         {
-            //printf("digit found! -> %c \n", c); // test
             while(isdigit(c) && !ispunct(c) && countNum <= maxInt)
             {
                 tempNum[countNum] = c;
@@ -111,23 +110,23 @@ token * scanner(FILE * fp)
             token tk;
             strcpy(tk.name, tempNum);
             tk.tokenType = numbersym;
-            table[countTB] = tk;
-            printf("token -> %s \n", table[countTB].name); // test
+            lexemes->arr[countTb] = tk;
+            lexemes->size = countTb + 1;
             memset(tempNum, 0, sizeof(tempNum));
             countNum = 0;
-            countTB++;
+            countTb++;
             
             continue;
         }
 
-        if(ispunct(c))
-        {
-            //printf("special found! -> %c \n", c); // test
-            continue;
-        }
+        // if(ispunct(c))
+        // {
+        //     //printf("special found! -> %c \n", c); // test
+        //     continue;
+        // }
     }
 
-    return table;
+    return lexemes;
 }
 
 int getReserved(char name[maxChar])
@@ -171,7 +170,11 @@ int getSpecial(char c)
     return -1;
 }
 
-void printTable(token * table)
+void printTable(table * lexemes)
 {
-
+    int j = lexemes->size;
+    for(int i = 0; i < j; i++)
+    {
+        printf("%s \t %d \n", lexemes->arr[i].name, lexemes->arr[i].tokenType);
+    }
 }
