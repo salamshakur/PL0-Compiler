@@ -17,7 +17,7 @@ typedef enum
     gtrsym, geqsym, lparentsym, rparentsym, commasym, semicolonsym,
     periodsym, becomessym, beginsym, endsym, ifsym, thensym, 
     whilesym, dosym, callsym, constsym, varsym, procsym, writesym,
-    readsym , elsesym 
+    readsym, elsesym, colonsym 
 } token_type;
 
 typedef struct token 
@@ -129,18 +129,39 @@ table * scanner(FILE * fp)
 
         if(ispunct(c))
         {
-            tempSym[countSym] = c;
-            countSym++;
-            tempSym[countSym] = '\0';
+            
+            if(c == ':')
+            {
+                printf("colon found! \n");
+                // while(ispunct(c))
+                // {
+                //     c = fgetc(fp);
+                //     char temp = c;
+                //     if(c != '=')
+                //     {
+                //         error(4);
+                //     }
+                //     else
+                //     {
 
-            token tk;
-            strcpy(tk.name, tempSym);
-            tk.tokenType = getSpecial(tk.name);
-            lexemes->arr[countTb] = tk;
-            lexemes->size = countTb + 1;
-            memset(tempSym, 0, sizeof(tempSym));
-            countSym = 0;
-            countTb++;
+                //     }
+                // }
+            }
+            else
+            {
+                tempSym[countSym] = c;
+                countSym++;
+                tempSym[countSym] = '\0';
+
+                token tk;
+                strcpy(tk.name, tempSym);
+                tk.tokenType = getSpecial(tk.name);
+                lexemes->arr[countTb] = tk;
+                lexemes->size = countTb + 1;
+                memset(tempSym, 0, sizeof(tempSym));
+                countSym = 0;
+                countTb++;
+            }
         }
     }
 
@@ -179,6 +200,7 @@ int getSpecial(char name[maxSym])
     if (strcmp(name, "<")  == 0) return lessym;
     if (strcmp(name, ">")  == 0) return gtrsym;
     if (strcmp(name, ";")  == 0) return semicolonsym;
+    if (strcmp(name, ":")  == 0) return colonsym;
     error(4);
 }
 
