@@ -37,6 +37,7 @@ int     getReserved(char * name);
 int     getSpecial(char c);
 void    printTable(table * lexemes);
 void    printList(table * lexemes);
+void    error();
 
 void beginLEX(FILE * fp)
 {
@@ -79,8 +80,10 @@ table * scanner(FILE * fp)
 
         if(isalpha(c))
         {
-            while((isalnum(c)) && !ispunct(c) && countId <= maxChar)
-            {
+            while((isalnum(c)) && !ispunct(c))
+            {   
+                if(countId >= maxChar)
+                    error();
                 tempID[countId] = c;
                 countId++;
                 c = fgetc(fp);
@@ -198,4 +201,10 @@ void printList(table * lexemes)
         printf("%d ", tk.tokenType);
     }
     printf("\n");
+}
+
+void error()
+{
+    printf("error hit! \n");
+    exit(1);
 }
