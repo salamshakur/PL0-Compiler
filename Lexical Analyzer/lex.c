@@ -8,7 +8,7 @@
 
 #define maxChar 11
 #define maxInt  5
-#define maxSym  1
+#define maxSym  2
 
 typedef enum 
 { 
@@ -129,26 +129,38 @@ table * scanner(FILE * fp)
 
         if(ispunct(c))
         {
-            
-            if(c == ':')
-            {
-                printf("colon found! \n");
-                // while(ispunct(c))
-                // {
-                //     c = fgetc(fp);
-                //     char temp = c;
-                //     if(c != '=')
-                //     {
-                //         error(4);
-                //     }
-                //     else
-                //     {
+            // if(c == ':')
+            // {
+            //     tempSym[countSym] = c;
+            //     countSym++;
+            //     //printf("colon found! \n");
+            //     while(ispunct(c))
+            //     {
+            //         c = fgetc(fp);
+            //         if(c != '=' || isspace(c))
+            //         {
+            //             error(4);
+            //         }
+            //         else
+            //         {
+            //             tempSym[countSym] = c;
+            //             countSym++;
+            //             tempSym[countSym] = '\0';
 
-                //     }
-                // }
-            }
-            else
-            {
+            //             printf("declar var -> %s \n", tempSym);
+            //             token tk;
+            //             strcpy(tk.name, tempSym);
+            //             tk.tokenType = getSpecial(tk.name);
+            //             lexemes->arr[countTb] = tk;
+            //             lexemes->size = countTb + 1;
+            //             memset(tempSym, 0, sizeof(tempSym));
+            //             countSym = 0;
+            //             countTb++;
+            //         }
+            //     }
+            // }
+            // else
+            // {
                 tempSym[countSym] = c;
                 countSym++;
                 tempSym[countSym] = '\0';
@@ -161,7 +173,7 @@ table * scanner(FILE * fp)
                 memset(tempSym, 0, sizeof(tempSym));
                 countSym = 0;
                 countTb++;
-            }
+            //}
         }
     }
 
@@ -188,18 +200,18 @@ int getReserved(char name[maxChar])
 
 int getSpecial(char name[maxSym])
 {
-    if (strcmp(name, "+")  == 0) return plussym;
-    if (strcmp(name, "-")  == 0) return minussym;
-    if (strcmp(name, "*")  == 0) return multsym;
-    if (strcmp(name, "/")  == 0) return slashsym;
-    if (strcmp(name, "(")  == 0) return lparentsym;
-    if (strcmp(name, ")")  == 0) return rparentsym;
-    if (strcmp(name, "=")  == 0) return eqsym;
-    if (strcmp(name, ",")  == 0) return commasym;
-    if (strcmp(name, ".")  == 0) return periodsym;
-    if (strcmp(name, "<")  == 0) return lessym;
-    if (strcmp(name, ">")  == 0) return gtrsym;
-    if (strcmp(name, ";")  == 0) return semicolonsym;
+    if (strcmp(name, "+")   == 0) return plussym;
+    if (strcmp(name, "-")   == 0) return minussym;
+    if (strcmp(name, "*")   == 0) return multsym;
+    if (strcmp(name, "/")   == 0) return slashsym;
+    if (strcmp(name, "(")   == 0) return lparentsym;
+    if (strcmp(name, ")")   == 0) return rparentsym;
+    if (strcmp(name, "=")   == 0) return eqsym;
+    if (strcmp(name, ",")   == 0) return commasym;
+    if (strcmp(name, ".")   == 0) return periodsym;
+    if (strcmp(name, "<")   == 0) return lessym;
+    if (strcmp(name, ">")   == 0) return gtrsym;
+    if (strcmp(name, ";")   == 0) return semicolonsym;
     if (strcmp(name, ":")  == 0) return colonsym;
     error(4);
 }
