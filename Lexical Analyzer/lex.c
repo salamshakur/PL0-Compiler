@@ -25,16 +25,24 @@ typedef struct token
     int tokenType;    
 } token;
 
-void printSource(FILE * fp);
-void scanner(FILE * fp);
-int  getReserved(char * name);
-int  getSpecial(char c);
+typedef struct table
+{
+    struct token * arr;
+    int size;
+} table;
+
+void    printSource(FILE * fp);
+table * scanner(FILE * fp);
+int     getReserved(char * name);
+int     getSpecial(char c);
+void    printTable(table * lexemes);
 
 void beginLEX(FILE * fp)
 {
     printSource(fp);
     rewind(fp);
-    scanner(fp);
+    table * lexemes = scanner(fp);
+    printTable(lexemes);
 }
 
 void printSource(FILE * fp)
@@ -51,16 +59,17 @@ void printSource(FILE * fp)
     printf("\n");
 }
 
-void scanner(FILE * fp)
+table * scanner(FILE * fp)
 {
     char    c;
     int     countId  = 0;
     int     countNum = 0;
-    int     countTB  = 0;
+    int     countTb  = 0;
     char    tempID[maxChar + 1];
     char    tempNum[maxInt + 1];
-    token * table = malloc(sizeof(token) * 1000);
-
+    table * lexemes = malloc(sizeof(table));
+    token * arr = malloc(sizeof(token) * 3000);
+    lexemes->arr = arr;
 
     while(!feof(fp))
     {
@@ -68,8 +77,7 @@ void scanner(FILE * fp)
 
         if(isalpha(c))
         {
-            //printf("letter found! -> %c \n", c); // test
-            while((isalpha(c) || isdigit(c)) && !ispunct(c) && countId <= maxChar)
+            while((isalnum(c)) && !ispunct(c) && countId <= maxChar)
             {
                 tempID[countId] = c;
                 countId++;
@@ -80,36 +88,45 @@ void scanner(FILE * fp)
             token tk;
             strcpy(tk.name, tempID);
             tk.tokenType = getReserved(tk.name);
-            table[countTB] = tk;
-            //printf("token -> %s \n", table[countTB].name); // test
+            lexemes->arr[countTb] = tk;
+            lexemes->size = countTb + 1;
             memset(tempID, 0, sizeof(tempID));
             countId = 0;
-            countTB++;
-
+            countTb++;
+            
             continue;
         }
 
         if(isdigit(c))
         {
-            //printf("digit found! -> %c \n", c); // test
-            // while(isdigit(c) && countNum <= maxInt)
-            // {
-            //     tempNum[countNum] = c;
-            //     countNum++;
-            //     c = fgetc(fp);
-            // }
+            while(isdigit(c) && !ispunct(c) && countNum <= maxInt)
+            {
+                tempNum[countNum] = c;
+                countNum++;
+                c = fgetc(fp);
+            }
+            tempNum[countNum] = '\0';
+
+            token tk;
+            strcpy(tk.name, tempNum);
+            tk.tokenType = numbersym;
+            lexemes->arr[countTb] = tk;
+            lexemes->size = countTb + 1;
+            memset(tempNum, 0, sizeof(tempNum));
+            countNum = 0;
+            countTb++;
             
-            // tempNum[countNum] = '\0';
-            // printf("%s\n", tempName);
             continue;
         }
 
-        if(ispunct(c))
-        {
-            //printf("special found! -> %c \n", c); // test
-            continue;
-        }
+        // if(ispunct(c))
+        // {
+        //     //printf("special found! -> %c \n", c); // test
+        //     continue;
+        // }
     }
+
+    return lexemes;
 }
 
 int getReserved(char name[maxChar])
@@ -151,4 +168,13 @@ int getSpecial(char c)
     if (c == ';') return semicolonsym;
     if (c == ':') return -1;
     return -1;
+}
+
+void printTable(table * lexemes)
+{
+    int j = lexemes->size;
+    for(int i = 0; i < j; i++)
+    {
+        printf("%s \t %d \n", lexemes->arr[i].name, lexemes->arr[i].tokenType);
+    }
 }
