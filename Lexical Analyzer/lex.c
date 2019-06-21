@@ -8,6 +8,7 @@
 
 #define maxChar 11
 #define maxInt  5
+#define maxSym  1
 
 typedef enum 
 { 
@@ -34,7 +35,7 @@ typedef struct table
 void    printSource(FILE * fp);
 table * scanner(FILE * fp);
 int     getReserved(char * name);
-int     getSpecial(char c);
+int     getSpecial(char * name);
 void    printTable(table * lexemes);
 void    printList(table * lexemes);
 void    error(int val);
@@ -67,9 +68,11 @@ table * scanner(FILE * fp)
     char    c;
     int     countId  = 0;
     int     countNum = 0;
+    int     countSym = 0;
     int     countTb  = 0;
     char    tempID[maxChar + 1];
     char    tempNum[maxInt + 1];
+    char    tempSym[maxSym + 1];
     table * lexemes = malloc(sizeof(table));
     token * arr = malloc(sizeof(token) * 3000);
     lexemes->arr = arr;
@@ -98,8 +101,6 @@ table * scanner(FILE * fp)
             memset(tempID, 0, sizeof(tempID));
             countId = 0;
             countTb++;
-            
-            continue;
         }
 
         if(isdigit(c))
@@ -124,15 +125,23 @@ table * scanner(FILE * fp)
             memset(tempNum, 0, sizeof(tempNum));
             countNum = 0;
             countTb++;
-            
-            continue;
         }
 
-        // if(ispunct(c))
-        // {
-        //     //printf("special found! -> %c \n", c); // test
-        //     continue;
-        // }
+        if(ispunct(c))
+        {
+            tempSym[countSym] = c;
+            countSym++;
+            tempSym[countSym] = '\0';
+
+            token tk;
+            strcpy(tk.name, tempSym);
+            tk.tokenType = getSpecial(tk.name);
+            lexemes->arr[countTb] = tk;
+            lexemes->size = countTb + 1;
+            memset(tempSym, 0, sizeof(tempSym));
+            countSym = 0;
+            countTb++;
+        }
     }
 
     return lexemes;
@@ -156,26 +165,24 @@ int getReserved(char name[maxChar])
     return identsym;
 }
 
-int getSpecial(char c)
+int getSpecial(char name[maxSym])
 {
-    // TODO: add nested if for => <= etc...
-    // -1 is invalid
-    // * should be lead by /
-    // = should follow other symbols or :
-    // remember these and fix it...
-    if (c == '+') return plussym;
-    if (c == '-') return minussym;
-    if (c == '*') return -1;
-    if (c == '/') return slashsym;
-    if (c == '(') return lparentsym;
-    if (c == ')') return rparentsym;
-    if (c == '=') return eqsym;
-    if (c == ',') return commasym;
-    if (c == '.') return periodsym;
-    if (c == '<') return lessym;
-    if (c == '>') return gtrsym;
-    if (c == ';') return semicolonsym;
-    if (c == ':') return -1;
+    // TODO:
+    // implement look ahead, to capture >=, <=, :=, /* */ symbols
+    // throw error if invalid
+    if (strcmp(name, "+")  == 0) return plussym;
+    if (strcmp(name, "-")  == 0) return minussym;
+    if (strcmp(name, "*")  == 0) return multsym;
+    if (strcmp(name, "/")  == 0) return slashsym;
+    if (strcmp(name, "(")  == 0) return lparentsym;
+    if (strcmp(name, ")")  == 0) return rparentsym;
+    if (strcmp(name, "=")  == 0) return eqsym;
+    if (strcmp(name, ",")  == 0) return commasym;
+    if (strcmp(name, ".")  == 0) return periodsym;
+    if (strcmp(name, "<")  == 0) return lessym;
+    if (strcmp(name, ">")  == 0) return gtrsym;
+    if (strcmp(name, ";")  == 0) return semicolonsym;
+    if (strcmp(name, ":")  == 0) return -1;
     return -1;
 }
 
