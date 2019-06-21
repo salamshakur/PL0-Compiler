@@ -36,6 +36,7 @@ table * scanner(FILE * fp);
 int     getReserved(char * name);
 int     getSpecial(char c);
 void    printTable(table * lexemes);
+void    printList(table * lexemes);
 
 void beginLEX(FILE * fp)
 {
@@ -43,6 +44,7 @@ void beginLEX(FILE * fp)
     rewind(fp);
     table * lexemes = scanner(fp);
     printTable(lexemes);
+    printList(lexemes);
 }
 
 void printSource(FILE * fp)
@@ -179,4 +181,21 @@ void printTable(table * lexemes)
     {
         printf("%s \t %d \n", lexemes->arr[i].name, lexemes->arr[i].tokenType);
     }
+    printf("\n");
+}
+
+void printList(table * lexemes)
+{
+    printf("Lexeme List: \n");
+    int j = lexemes->size;
+    for(int i = 0; i < j; i++)
+    {
+        token tk = lexemes->arr[i];
+        if(tk.tokenType == identsym || tk.tokenType == numbersym)
+        {
+            printf("%d %s ", tk.tokenType, tk.name);
+        }
+        printf("%d ", tk.tokenType);
+    }
+    printf("\n");
 }
