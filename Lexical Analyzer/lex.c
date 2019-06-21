@@ -104,8 +104,10 @@ table * scanner(FILE * fp)
 
         if(isdigit(c))
         {
-            while(isdigit(c) && !ispunct(c))
+            while(!ispunct(c))
             {
+                if(isalpha(c))
+                    error(1);
                 if(countNum >= maxInt)
                     error(2);
                 tempNum[countNum] = c;
