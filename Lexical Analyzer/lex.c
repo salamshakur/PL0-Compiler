@@ -8,7 +8,7 @@
 
 #define maxChar 11
 #define maxInt  5
-#define maxSym  1
+#define maxSym  2
 
 typedef enum 
 { 
@@ -17,7 +17,7 @@ typedef enum
     gtrsym, geqsym, lparentsym, rparentsym, commasym, semicolonsym,
     periodsym, becomessym, beginsym, endsym, ifsym, thensym, 
     whilesym, dosym, callsym, constsym, varsym, procsym, writesym,
-    readsym , elsesym 
+    readsym, elsesym, colonsym 
 } token_type;
 
 typedef struct token 
@@ -129,18 +129,48 @@ table * scanner(FILE * fp)
 
         if(ispunct(c))
         {
-            tempSym[countSym] = c;
-            countSym++;
-            tempSym[countSym] = '\0';
+            if(c == ':')
+            {
+                tempSym[countSym] = c;
+                countSym++;
 
-            token tk;
-            strcpy(tk.name, tempSym);
-            tk.tokenType = getSpecial(tk.name);
-            lexemes->arr[countTb] = tk;
-            lexemes->size = countTb + 1;
-            memset(tempSym, 0, sizeof(tempSym));
-            countSym = 0;
-            countTb++;
+                c = fgetc(fp);
+
+                if(c != '=' && c != ' ')
+                {
+                    error(4);
+                }
+                else
+                {  
+                    tempSym[countSym] = c;
+                    countSym++;
+                    tempSym[countSym] = '\0';
+
+                    token tk;
+                    strcpy(tk.name, tempSym);
+                    tk.tokenType = getSpecial(tk.name);
+                    lexemes->arr[countTb] = tk;
+                    lexemes->size = countTb + 1;
+                    memset(tempSym, 0, sizeof(tempSym));
+                    countSym = 0;
+                    countTb++;
+                }
+            }
+            else
+            {
+                tempSym[countSym] = c;
+                countSym++;
+                tempSym[countSym] = '\0';
+
+                token tk;
+                strcpy(tk.name, tempSym);
+                tk.tokenType = getSpecial(tk.name);
+                lexemes->arr[countTb] = tk;
+                lexemes->size = countTb + 1;
+                memset(tempSym, 0, sizeof(tempSym));
+                countSym = 0;
+                countTb++;
+            }
         }
     }
 
@@ -167,23 +197,21 @@ int getReserved(char name[maxChar])
 
 int getSpecial(char name[maxSym])
 {
-    // TODO:
-    // implement look ahead, to capture >=, <=, :=, /* */ symbols
-    // throw error if invalid
-    if (strcmp(name, "+")  == 0) return plussym;
-    if (strcmp(name, "-")  == 0) return minussym;
-    if (strcmp(name, "*")  == 0) return multsym;
-    if (strcmp(name, "/")  == 0) return slashsym;
-    if (strcmp(name, "(")  == 0) return lparentsym;
-    if (strcmp(name, ")")  == 0) return rparentsym;
-    if (strcmp(name, "=")  == 0) return eqsym;
-    if (strcmp(name, ",")  == 0) return commasym;
-    if (strcmp(name, ".")  == 0) return periodsym;
-    if (strcmp(name, "<")  == 0) return lessym;
-    if (strcmp(name, ">")  == 0) return gtrsym;
-    if (strcmp(name, ";")  == 0) return semicolonsym;
-    if (strcmp(name, ":")  == 0) return -1;
-    return -1;
+    if (strcmp(name, "+")   == 0) return plussym;
+    if (strcmp(name, "-")   == 0) return minussym;
+    if (strcmp(name, "*")   == 0) return multsym;
+    if (strcmp(name, "/")   == 0) return slashsym;
+    if (strcmp(name, "(")   == 0) return lparentsym;
+    if (strcmp(name, ")")   == 0) return rparentsym;
+    if (strcmp(name, "=")   == 0) return eqsym;
+    if (strcmp(name, ",")   == 0) return commasym;
+    if (strcmp(name, ".")   == 0) return periodsym;
+    if (strcmp(name, "<")   == 0) return lessym;
+    if (strcmp(name, ">")   == 0) return gtrsym;
+    if (strcmp(name, ";")   == 0) return semicolonsym;
+    if (strcmp(name, ":")   == 0) return colonsym;
+    if (strcmp(name, ":=")  == 0) return becomessym;
+    error(4);
 }
 
 void printTable(table * lexemes)
@@ -206,10 +234,9 @@ void printList(table * lexemes)
     {
         token tk = lexemes->arr[i];
         if(tk.tokenType == identsym || tk.tokenType == numbersym)
-        {
             printf("%d %s ", tk.tokenType, tk.name);
-        }
-        printf("%d ", tk.tokenType);
+        else
+            printf("%d ", tk.tokenType);
     }
     printf("\n");
 }
