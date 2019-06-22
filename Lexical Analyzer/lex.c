@@ -129,38 +129,35 @@ table * scanner(FILE * fp)
 
         if(ispunct(c))
         {
-            // if(c == ':')
-            // {
-            //     tempSym[countSym] = c;
-            //     countSym++;
-            //     //printf("colon found! \n");
-            //     while(ispunct(c))
-            //     {
-            //         c = fgetc(fp);
-            //         if(c != '=' || isspace(c))
-            //         {
-            //             error(4);
-            //         }
-            //         else
-            //         {
-            //             tempSym[countSym] = c;
-            //             countSym++;
-            //             tempSym[countSym] = '\0';
+            if(c == ':')
+            {
+                tempSym[countSym] = c;
+                countSym++;
 
-            //             printf("declar var -> %s \n", tempSym);
-            //             token tk;
-            //             strcpy(tk.name, tempSym);
-            //             tk.tokenType = getSpecial(tk.name);
-            //             lexemes->arr[countTb] = tk;
-            //             lexemes->size = countTb + 1;
-            //             memset(tempSym, 0, sizeof(tempSym));
-            //             countSym = 0;
-            //             countTb++;
-            //         }
-            //     }
-            // }
-            // else
-            // {
+                c = fgetc(fp);
+
+                if(c != '=' && c != ' ')
+                {
+                    error(4);
+                }
+                else
+                {  
+                    tempSym[countSym] = c;
+                    countSym++;
+                    tempSym[countSym] = '\0';
+
+                    token tk;
+                    strcpy(tk.name, tempSym);
+                    tk.tokenType = getSpecial(tk.name);
+                    lexemes->arr[countTb] = tk;
+                    lexemes->size = countTb + 1;
+                    memset(tempSym, 0, sizeof(tempSym));
+                    countSym = 0;
+                    countTb++;
+                }
+            }
+            else
+            {
                 tempSym[countSym] = c;
                 countSym++;
                 tempSym[countSym] = '\0';
@@ -173,7 +170,7 @@ table * scanner(FILE * fp)
                 memset(tempSym, 0, sizeof(tempSym));
                 countSym = 0;
                 countTb++;
-            //}
+            }
         }
     }
 
@@ -212,7 +209,8 @@ int getSpecial(char name[maxSym])
     if (strcmp(name, "<")   == 0) return lessym;
     if (strcmp(name, ">")   == 0) return gtrsym;
     if (strcmp(name, ";")   == 0) return semicolonsym;
-    if (strcmp(name, ":")  == 0) return colonsym;
+    if (strcmp(name, ":")   == 0) return colonsym;
+    if (strcmp(name, ":=")  == 0) return becomessym;
     error(4);
 }
 
