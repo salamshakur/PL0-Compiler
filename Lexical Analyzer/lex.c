@@ -313,6 +313,8 @@ int getReserved(char name[maxChar])
     if (strcmp(name, "do")        == 0) return dosym;
     if (strcmp(name, "read")      == 0) return readsym;
     if (strcmp(name, "write")     == 0) return writesym;
+    if (strcmp(name, "odd")       == 0) return oddsym;
+    if (strcmp(name, "mult")      == 0) return multsym;
     return identsym;
 }
 
