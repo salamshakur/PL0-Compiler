@@ -136,7 +136,7 @@ table * scanner(FILE * fp)
 
                 c = fgetc(fp);
 
-                if(c != '=' && isspace(c))
+                if(c != '=')
                 {
                     error(4);
                 }
