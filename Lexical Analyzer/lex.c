@@ -183,10 +183,33 @@ table * scanner(FILE * fp)
                     countSym = 0;
                     countTb++;
                 }
-                else
-                {
-                    // check for comment
-                }
+               
+               if(c == '*')
+               {
+                   int flag = 1;
+                   while(flag)
+                   {   
+                        c = fgetc(fp);
+
+                        while(c != '*')
+                        {   
+                            c = fgetc(fp);
+                            if(feof(fp))
+                                error(5);
+                        }
+
+                        c = fgetc(fp);
+                        
+                        if(c == '*')
+                            ungetc(c, fp);
+
+                        if(c == '/')
+                            flag = 0;       
+                   }
+                   memset(tempSym, 0, sizeof(tempSym));
+                   countSym = 0;
+               }
+
             }
             else if(c == '!')
             {
@@ -345,6 +368,7 @@ int getSpecial(char name[maxSym])
     if (strcmp(name, "!=")  == 0) return neqsym;
     if (strcmp(name, "<=")  == 0) return leqsym;
     if (strcmp(name, ">=")  == 0) return geqsym;
+    printf("error -> %s \n", name);
     error(4);
 }
 
@@ -384,6 +408,7 @@ void error(int val)
         case 2: message = "Number too long."; break;
         case 3: message = "Name too long."; break;
         case 4: message = "Invalid symbols."; break;
+        case 5: message = "Comment not properly closed"; break;
     }
     printf("error hit! %s \n", message);
     exit(1);
