@@ -74,7 +74,7 @@ table * scanner(FILE * fp)
     char    tempNum[maxInt + 1];
     char    tempSym[maxSym + 1];
     table * lexemes = malloc(sizeof(table));
-    token * arr = malloc(sizeof(token) * 10000);
+    token * arr = malloc(sizeof(token) * 100000);
     lexemes->arr = arr;
 
     while(!feof(fp))

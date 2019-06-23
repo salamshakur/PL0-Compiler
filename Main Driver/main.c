@@ -16,6 +16,7 @@ void main(int argc, char ** argv)
 
     //beginVM(fp);
     beginLEX(fp);
+    fclose(fp);
 }
 
 FILE * fileReader(int argc, char ** argv)
