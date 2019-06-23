@@ -74,7 +74,7 @@ table * scanner(FILE * fp)
     char    tempNum[maxInt + 1];
     char    tempSym[maxSym + 1];
     table * lexemes = malloc(sizeof(table));
-    token * arr = malloc(sizeof(token) * 3000);
+    token * arr = malloc(sizeof(token) * 10000);
     lexemes->arr = arr;
 
     while(!feof(fp))
@@ -108,16 +108,7 @@ table * scanner(FILE * fp)
             while(!ispunct(c) && !isspace(c))
             {
                 if(isalpha(c))
-                {
-                    printf("char outputed -> %c \n", c);
-                    c = fgetc(fp);
-                    printf("char outputed -> %c \n", c);
-                    c = fgetc(fp);
-                    printf("char outputed -> %c \n", c);
-                    c = fgetc(fp);
-                    printf("char outputed -> %c \n", c);
                     error(1);
-                }
                 if(countNum >= maxInt)
                     error(2);
                 tempNum[countNum] = c;
@@ -368,7 +359,6 @@ int getSpecial(char name[maxSym])
     if (strcmp(name, "!=")  == 0) return neqsym;
     if (strcmp(name, "<=")  == 0) return leqsym;
     if (strcmp(name, ">=")  == 0) return geqsym;
-    printf("error -> %s \n", name);
     error(4);
 }
 
@@ -410,6 +400,6 @@ void error(int val)
         case 4: message = "Invalid symbols."; break;
         case 5: message = "Comment not properly closed"; break;
     }
-    printf("error hit! %s \n", message);
+    printf("Error hit! %s \n", message);
     exit(1);
 }
