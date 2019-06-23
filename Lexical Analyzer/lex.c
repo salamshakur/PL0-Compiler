@@ -17,7 +17,7 @@ typedef enum
     gtrsym, geqsym, lparentsym, rparentsym, commasym, semicolonsym,
     periodsym, becomessym, beginsym, endsym, ifsym, thensym, 
     whilesym, dosym, callsym, constsym, varsym, procsym, writesym,
-    readsym, elsesym, colonsym 
+    readsym, elsesym
 } token_type;
 
 typedef struct token 
@@ -74,7 +74,7 @@ table * scanner(FILE * fp)
     char    tempNum[maxInt + 1];
     char    tempSym[maxSym + 1];
     table * lexemes = malloc(sizeof(table));
-    token * arr = malloc(sizeof(token) * 3000);
+    token * arr = malloc(sizeof(token) * 10000);
     lexemes->arr = arr;
 
     while(!feof(fp))
@@ -105,7 +105,7 @@ table * scanner(FILE * fp)
 
         if(isdigit(c))
         {
-            while(!ispunct(c))
+            while(!ispunct(c) && !isspace(c))
             {
                 if(isalpha(c))
                     error(1);
@@ -174,10 +174,33 @@ table * scanner(FILE * fp)
                     countSym = 0;
                     countTb++;
                 }
-                else
-                {
-                    // check for comment
-                }
+               
+               if(c == '*')
+               {
+                   int flag = 1;
+                   while(flag)
+                   {   
+                        c = fgetc(fp);
+
+                        while(c != '*')
+                        {   
+                            c = fgetc(fp);
+                            if(feof(fp))
+                                error(5);
+                        }
+
+                        c = fgetc(fp);
+                        
+                        if(c == '*')
+                            ungetc(c, fp);
+
+                        if(c == '/')
+                            flag = 0;       
+                   }
+                   memset(tempSym, 0, sizeof(tempSym));
+                   countSym = 0;
+               }
+
             }
             else if(c == '!')
             {
@@ -332,7 +355,6 @@ int getSpecial(char name[maxSym])
     if (strcmp(name, "<")   == 0) return lessym;
     if (strcmp(name, ">")   == 0) return gtrsym;
     if (strcmp(name, ";")   == 0) return semicolonsym;
-    if (strcmp(name, ":")   == 0) return colonsym;
     if (strcmp(name, ":=")  == 0) return becomessym;
     if (strcmp(name, "!=")  == 0) return neqsym;
     if (strcmp(name, "<=")  == 0) return leqsym;
@@ -376,7 +398,8 @@ void error(int val)
         case 2: message = "Number too long."; break;
         case 3: message = "Name too long."; break;
         case 4: message = "Invalid symbols."; break;
+        case 5: message = "Comment not properly closed"; break;
     }
-    printf("error hit! %s \n", message);
+    printf("Error hit! %s \n", message);
     exit(1);
 }
