@@ -136,7 +136,7 @@ table * scanner(FILE * fp)
 
                 c = fgetc(fp);
 
-                if(c != '=' && c == ' ')
+                if(c != '=' && isspace(c))
                 {
                     error(4);
                 }
@@ -239,7 +239,6 @@ table * scanner(FILE * fp)
                     memset(tempSym, 0, sizeof(tempSym));
                     countSym = 0;
                     countTb++;
-
                 }
             }
             else
