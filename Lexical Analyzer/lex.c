@@ -234,21 +234,7 @@ table * scanner(FILE * fp)
                 countSym++;
                 c = fgetc(fp);
 
-                if(c != '=')
-                {
-                    tempSym[countSym] = '\0';
-
-                    token tk;
-                    strcpy(tk.name, tempSym);
-                    tk.tokenType = getSpecial(tk.name);
-                    lexemes->arr[countTb] = tk;
-                    lexemes->size = countTb + 1;
-                    memset(tempSym, 0, sizeof(tempSym));
-                    countSym = 0;
-                    countTb++;
-                }
-                
-                if(c == '=')
+                if(c == '>')
                 {
                     tempSym[countSym] = c;
                     countSym++;
@@ -263,6 +249,35 @@ table * scanner(FILE * fp)
                     countSym = 0;
                     countTb++;
                 }
+                else if(c == '=')
+                {
+                    tempSym[countSym] = c;
+                    countSym++;
+                    tempSym[countSym] = '\0';
+
+                    token tk;
+                    strcpy(tk.name, tempSym);
+                    tk.tokenType = getSpecial(tk.name);
+                    lexemes->arr[countTb] = tk;
+                    lexemes->size = countTb + 1;
+                    memset(tempSym, 0, sizeof(tempSym));
+                    countSym = 0;
+                    countTb++;
+                }
+                else
+                {
+                    tempSym[countSym] = '\0';
+
+                    token tk;
+                    strcpy(tk.name, tempSym);
+                    tk.tokenType = getSpecial(tk.name);
+                    lexemes->arr[countTb] = tk;
+                    lexemes->size = countTb + 1;
+                    memset(tempSym, 0, sizeof(tempSym));
+                    countSym = 0;
+                    countTb++;
+                }
+                
             }
             else if(c == '>')
             {
@@ -356,7 +371,7 @@ int getSpecial(char name[maxSym])
     if (strcmp(name, ">")   == 0) return gtrsym;
     if (strcmp(name, ";")   == 0) return semicolonsym;
     if (strcmp(name, ":=")  == 0) return becomessym;
-    if (strcmp(name, "!=")  == 0) return neqsym;
+    if (strcmp(name, "<>")  == 0) return neqsym;
     if (strcmp(name, "<=")  == 0) return leqsym;
     if (strcmp(name, ">=")  == 0) return geqsym;
     error(4);
