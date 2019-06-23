@@ -17,7 +17,7 @@ typedef enum
     gtrsym, geqsym, lparentsym, rparentsym, commasym, semicolonsym,
     periodsym, becomessym, beginsym, endsym, ifsym, thensym, 
     whilesym, dosym, callsym, constsym, varsym, procsym, writesym,
-    readsym, elsesym, colonsym 
+    readsym, elsesym
 } token_type;
 
 typedef struct token 
@@ -105,10 +105,19 @@ table * scanner(FILE * fp)
 
         if(isdigit(c))
         {
-            while(!ispunct(c))
+            while(!ispunct(c) && !isspace(c))
             {
                 if(isalpha(c))
+                {
+                    printf("char outputed -> %c \n", c);
+                    c = fgetc(fp);
+                    printf("char outputed -> %c \n", c);
+                    c = fgetc(fp);
+                    printf("char outputed -> %c \n", c);
+                    c = fgetc(fp);
+                    printf("char outputed -> %c \n", c);
                     error(1);
+                }
                 if(countNum >= maxInt)
                     error(2);
                 tempNum[countNum] = c;
@@ -332,7 +341,6 @@ int getSpecial(char name[maxSym])
     if (strcmp(name, "<")   == 0) return lessym;
     if (strcmp(name, ">")   == 0) return gtrsym;
     if (strcmp(name, ";")   == 0) return semicolonsym;
-    if (strcmp(name, ":")   == 0) return colonsym;
     if (strcmp(name, ":=")  == 0) return becomessym;
     if (strcmp(name, "!=")  == 0) return neqsym;
     if (strcmp(name, "<=")  == 0) return leqsym;
