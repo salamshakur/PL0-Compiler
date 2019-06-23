@@ -136,7 +136,7 @@ table * scanner(FILE * fp)
 
                 c = fgetc(fp);
 
-                if(c != '=' && c != ' ')
+                if(c != '=' && c == ' ')
                 {
                     error(4);
                 }
@@ -207,10 +207,40 @@ table * scanner(FILE * fp)
             }
             else if(c == '<')
             {
-                //printf("< found! \n");
-                // tempSym[countSym] = c;
-                // countSym++;
-                // c = fgetc(fp);
+                tempSym[countSym] = c;
+                countSym++;
+                c = fgetc(fp);
+
+                if(c != '=')
+                {
+                    tempSym[countSym] = '\0';
+
+                    token tk;
+                    strcpy(tk.name, tempSym);
+                    tk.tokenType = getSpecial(tk.name);
+                    lexemes->arr[countTb] = tk;
+                    lexemes->size = countTb + 1;
+                    memset(tempSym, 0, sizeof(tempSym));
+                    countSym = 0;
+                    countTb++;
+                }
+                
+                if(c == '=')
+                {
+                    tempSym[countSym] = c;
+                    countSym++;
+                    tempSym[countSym] = '\0';
+
+                    token tk;
+                    strcpy(tk.name, tempSym);
+                    tk.tokenType = getSpecial(tk.name);
+                    lexemes->arr[countTb] = tk;
+                    lexemes->size = countTb + 1;
+                    memset(tempSym, 0, sizeof(tempSym));
+                    countSym = 0;
+                    countTb++;
+
+                }
             }
             else
             {
