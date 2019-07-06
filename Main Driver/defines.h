@@ -7,3 +7,6 @@
 #define MAX_STACK_HEIGHT 23
 #define MAX_CODE_LENGTH  500
 #define MAX_LEXI_LEVELS  3
+
+/* for syn.c */
+#define NA -1

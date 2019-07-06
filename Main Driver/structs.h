@@ -36,7 +36,7 @@ typedef struct symbol
     int  kind;                // const = 1, var = 2, proc = 3
     char name[maxChar + 1];   // name up to 11 chars
     int  val;                 // numbers (ASCII value)
-    int  level;               // L level
+    int  lvl;                 // L level
     int  addr;                // M address
     int  mark;                // to indicate that code has been generated already for a block
 } symbol;

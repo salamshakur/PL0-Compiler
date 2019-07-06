@@ -24,4 +24,9 @@ int     base(int l, int base);
 void    ERROR_StackOverflow();
 
 /* for syn.c */
-void parser(table * lexemes);
+void    parser();
+void    program();
+void    block();
+void    constDeclaration();
+void    varDeclaration();
+void    insert();
