@@ -1,7 +1,7 @@
-void beginVM(FILE * fp)
+void virtual()
 {
     initialize();
-    instr * ir = fetch(fp);
+    fetch();
 
     while(hlt)
     {
@@ -12,10 +12,10 @@ void beginVM(FILE * fp)
     }
 }
 
-instr * fetch(FILE * fp)
+void fetch()
 {
     int op, r, l, m;
-    instr * ir = calloc(sizeof(instr), MAX_CODE_LENGTH);
+    ir = calloc(sizeof(instr), MAX_CODE_LENGTH);
 
     int i = 0;
     while(fscanf(fp, "%d %d %d %d", &op, &r, &l, &m) != EOF)
@@ -26,10 +26,8 @@ instr * fetch(FILE * fp)
         ir[i].m  = m;
         i++;
     }
-    fclose(fp);
 
     printInstructions(i, ir);
-    return ir;
 }
 
 void printInstructions(int n, instr * ir)

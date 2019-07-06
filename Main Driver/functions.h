@@ -1,18 +1,18 @@
 /* for main.c */
-FILE * fileReader(int argc, char ** argv);
+void    fileReader(int argc, char ** argv);
 
 /* for lex.c */
-void    printSource(FILE * fp);
-table * scanner(FILE * fp);
+void    scanner();
+void    printSource();
 int     getReserved(char * name);
 int     getSpecial(char * name);
-void    printTable(table * lexemes);
-void    printList(table * lexemes);
+void    printTable();
+void    printList();
 void    error(int val);
-void    beginVM(FILE * fp);
-instr * fetch(FILE * fp);
 
 /* for vm.c */
+void    virtual();
+void    fetch();
 char  * getOperationName(int op);
 void    initialize();
 void    execute(instr ir);
@@ -22,3 +22,6 @@ void    printStack();
 void    printRegisters();
 int     base(int l, int base);
 void    ERROR_StackOverflow();
+
+/* for syn.c */
+void parser(table * lexemes);

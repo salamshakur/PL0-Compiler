@@ -7,10 +7,10 @@
 
 void main(int argc, char ** argv)
 {
-    FILE * fp = fileReader(argc, argv);
+    fileReader(argc, argv);
 
-    //beginVM(fp);
-    table * lexemes = beginLEX(fp);
+    scanner();
+    //virtual();
     fclose(fp);
 }
 

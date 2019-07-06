@@ -1,10 +1,11 @@
 #include "../Lexical Analyzer/lex.c"
 #include "../Virtual Machine/vm.c"
+#include "../Syntatic Analyzer/syn.c"
 
 /* to read in source code to compile */
-FILE * fileReader(int argc, char ** argv)
+void fileReader(int argc, char ** argv)
 {
-    FILE * fp = NULL;
+    fp = NULL;
     if(argc < 2)
     {
         printf("Error: No input file found.\n");
@@ -14,5 +15,4 @@ FILE * fileReader(int argc, char ** argv)
         fp = fopen(argv[1], "r");
     else
         fp = fopen(argv[0], "r");
-    return fp;
 }

@@ -1,40 +1,10 @@
-table * beginLEX(FILE * fp)
+void scanner()
 {
-    printSource(fp);
-    rewind(fp);
-    table * lexemes = scanner(fp);
-    printTable(lexemes);
-    printList(lexemes);
-    return lexemes;
-}
-
-void printSource(FILE * fp)
-{
-    char c;
-    printf("\nSource Program: \n");
-    while(!feof(fp))
-    {
-        c = fgetc(fp);
-
-        if(c != EOF)
-            printf("%c", c);
-    }
-    printf("\n");
-}
-
-table * scanner(FILE * fp)
-{
-    char    c;
-    int     countId  = 0;
-    int     countNum = 0;
-    int     countSym = 0;
-    int     countTb  = 0;
-    char    tempID[maxChar + 1];
-    char    tempNum[maxInt + 1];
-    char    tempSym[maxSym + 1];
-    table * lexemes = malloc(sizeof(table));
-    token * arr = malloc(sizeof(token) * 100000);
+    lexemes = malloc(sizeof(table));
+    arr = malloc(sizeof(token) * 100000);
     lexemes->arr = arr;
+
+    printSource();
 
     while(!feof(fp))
     {
@@ -292,7 +262,8 @@ table * scanner(FILE * fp)
         }
     }
 
-    return lexemes;
+    printTable();
+    printList();
 }
 
 int getReserved(char name[maxChar])
@@ -336,7 +307,23 @@ int getSpecial(char name[maxSym])
     error(4);
 }
 
-void printTable(table * lexemes)
+void printSource()
+{
+    char c;
+    printf("\nSource Program: \n");
+    while(!feof(fp))
+    {
+        c = fgetc(fp);
+
+        if(c != EOF)
+            printf("%c", c);
+    }
+    printf("\n");
+
+    rewind(fp);
+}
+
+void printTable()
 {
     printf("Lexeme Table: \n");
     printf("lexeme \t token type \n");
@@ -348,7 +335,7 @@ void printTable(table * lexemes)
     printf("\n");
 }
 
-void printList(table * lexemes)
+void printList()
 {
     printf("Lexeme List: \n");
     int j = lexemes->size;
