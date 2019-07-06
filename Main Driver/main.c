@@ -8,7 +8,6 @@
 
 #include "../Virtual Machine/vm.c"
 #include "../Lexical Analyzer/lex.c"
-#include "../Syntatic Analyzer/syn.c"
 FILE * fileReader(int argc, char ** argv);
 
 void main(int argc, char ** argv)
@@ -17,7 +16,6 @@ void main(int argc, char ** argv)
 
     //beginVM(fp);
     table * lexemes = beginLEX(fp);
-    parser(lexemes);
     fclose(fp);
 }
 
