@@ -1,1 +1,2 @@
 const first = 15, other = 2;
+    var x, y, z;

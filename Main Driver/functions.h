@@ -29,4 +29,5 @@ void    program();
 void    block();
 void    constDeclaration();
 void    varDeclaration();
+void statementDeclaration();
 void    insert();

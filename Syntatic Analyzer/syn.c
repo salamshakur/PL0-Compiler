@@ -21,6 +21,8 @@ void block()
         constDeclaration();
     if(lexemes->arr[lexCount].tokenType == varsym)
         varDeclaration();
+    
+    statementDeclaration();
 }
 
 void constDeclaration()
@@ -59,10 +61,33 @@ void constDeclaration()
 
 void varDeclaration()
 {
+    int addrCount = 4;
+    do
+    {
+        lexCount++;
 
+        if(lexemes->arr[lexCount].tokenType != identsym)
+            exit(1);
+        
+        char * name = lexemes->arr[lexCount].name;
+        lexCount++;
+
+        insert(2, name, 0, 0, addrCount, 0);
+
+        addrCount++;
+
+    } while (lexemes->arr[lexCount].tokenType == commasym);
+    
+    if(lexemes->arr[lexCount].tokenType != semicolonsym)
+        exit(1);
+    
+    lexCount++;
 }
 
-
+void statementDeclaration()
+{
+    
+}
 
 
 
@@ -72,9 +97,10 @@ void insert(int kind, char name[], int val, int lvl, int addr, int mark)
 {
     symTable[symCount].kind  = kind;
     symTable[symCount].val   = val;
-    symTable[symCount].lvl = lvl;
+    symTable[symCount].lvl   = lvl;
     symTable[symCount].addr  = addr;
     symTable[symCount].mark  = mark;
     strcpy(symTable[symCount].name, name);
+    printf("kind - %d \t name - %s \t addr - %d\n", kind, name, addr);
     symCount++;
 }
