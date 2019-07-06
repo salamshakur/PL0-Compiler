@@ -40,13 +40,14 @@ void    printTable(table * lexemes);
 void    printList(table * lexemes);
 void    error(int val);
 
-void beginLEX(FILE * fp)
+table * beginLEX(FILE * fp)
 {
     printSource(fp);
     rewind(fp);
     table * lexemes = scanner(fp);
     printTable(lexemes);
     printList(lexemes);
+    return lexemes;
 }
 
 void printSource(FILE * fp)
