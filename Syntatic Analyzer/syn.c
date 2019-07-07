@@ -103,10 +103,28 @@ void statementDeclaration()
 
 
 
-void checkExpression()
+int checkExpression()
 {
+    if(lexemes->arr[lexCount].tokenType == plussym || lexemes->arr[lexCount].tokenType == minussym)
+        checkTerm();
+    
+    return 1;
+}
+
+void checkTerm()
+{
+    do
+    {
+        checkFactor();
+    } while (1);
     
 }
+
+void checkFactor()
+{
+
+}
+
 
 void insert(int kind, char name[], int val, int lvl, int addr, int mark)
 {
