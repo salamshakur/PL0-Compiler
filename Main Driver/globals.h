@@ -1,5 +1,5 @@
 /* for main.c */
-FILE   * fp;
+FILE   * fp = NULL;
 
 /* for lex.c */
 table  * lexemes;
@@ -25,5 +25,5 @@ int      hlt;  // halt flag
 
 /* for syn.c */
 symbol * symTable;
-int      symCount;
-int      lexCount;
+int      symCount = 1;
+int      lexCount = 0;

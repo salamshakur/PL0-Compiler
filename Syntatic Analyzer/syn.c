@@ -1,7 +1,5 @@
 void parser()
 {
-    symCount = 1;
-    lexCount = 0;
     symTable = malloc(sizeof(symbol) * 100000);
 
     program();

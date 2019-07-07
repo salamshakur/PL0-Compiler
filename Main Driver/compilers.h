@@ -5,7 +5,6 @@
 /* to read in source code to compile */
 void fileReader(int argc, char ** argv)
 {
-    fp = NULL;
     if(argc < 2)
     {
         printf("Error: No input file found.\n");
