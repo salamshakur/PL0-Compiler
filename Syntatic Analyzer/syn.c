@@ -86,12 +86,23 @@ void varDeclaration()
 
 void statementDeclaration()
 {
-    
+    if(lexemes->arr[lexCount].tokenType == identsym)
+    {
+        if(lexemes->arr[lexCount].tokenType != eqsym)
+            exit(1);
+        // else check if expression...
+    }
+
+        
 }
 
 
 
 
+void checkExpression()
+{
+    
+}
 
 void insert(int kind, char name[], int val, int lvl, int addr, int mark)
 {
