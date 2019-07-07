@@ -90,10 +90,14 @@ void statementDeclaration()
     {
         if(lexemes->arr[lexCount].tokenType != eqsym)
             exit(1);
-        // else check if expression...
+        
+        lexCount++;
+
+        if(!checkExpression())
+            exit(1);
     }
 
-        
+    
 }
 
 
