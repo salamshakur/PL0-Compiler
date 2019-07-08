@@ -72,7 +72,7 @@ void varDeclaration()
             exit(1);
         
         (lookUp(lexemes->arr[lexCount].name) == -1)? strcpy(name, lexemes->arr[lexCount].name) : ERROR_Syn(2);
-        
+
         lexCount++;
 
         insert(2, name, 0, 0, addrCount, 0);
@@ -93,20 +93,42 @@ void statementDeclaration()
     {
         int n = lookUp(lexemes->arr[lexCount].name);
 
-        if(n == -1)
-            exit(1); // doesn't exist
+        if(n == -1) ERROR_Syn(6);
 
         lexCount++;
 
-        if(lexemes->arr[lexCount].tokenType != becomessym)
-            exit(1);
+        if(lexemes->arr[lexCount].tokenType != becomessym) ERROR_Syn(7);
         
         lexCount++;
 
         expressionDeclaration();
     }
 
+    if(lexemes->arr[lexCount].tokenType == beginsym)
+    {
+
+    }
+
+    if(lexemes->arr[lexCount].tokenType == ifsym)
+    {
+
+    }
     
+    if(lexemes->arr[lexCount].tokenType == whilesym)
+    {
+        
+    }
+    
+    if(lexemes->arr[lexCount].tokenType == readsym)
+    {
+    
+    }
+
+    
+    if(lexemes->arr[lexCount].tokenType == writesym)
+    {
+        
+    }
 }
 
 
@@ -115,19 +137,18 @@ void statementDeclaration()
 void expressionDeclaration()
 {
     if(lexemes->arr[lexCount].tokenType == plussym || lexemes->arr[lexCount].tokenType == minussym)
-    {
         lexCount++;
-        termDeclaration();
-    }
     
+    do 
+        termDeclaration();
+    while(lexemes->arr[lexCount].tokenType == plussym || lexemes->arr[lexCount].tokenType == minussym);
 }
 
 void termDeclaration()
 {
     do
-    {
         factorDeclaration();
-    } while (1);
+    while (lexemes->arr[lexCount].tokenType == multsym || lexemes->arr[lexCount].tokenType == slashsym);
     
 }
 
@@ -135,7 +156,7 @@ void factorDeclaration()
 {
     if(lexemes->arr[lexCount].tokenType == identsym)
     {
-
+        
     }
 
     if(lexemes->arr[lexCount].tokenType == numbersym)
@@ -147,6 +168,8 @@ void factorDeclaration()
     {
         
     }
+
+    lexCount++;
 }
 
 
@@ -182,6 +205,8 @@ void ERROR_Syn(int val)
         case 3: message = "Equal symbol not found."; break;
         case 4: message = "Number not found."; break;
         case 5: message = "Semicolon not found."; break;
+        case 6: message = "Undeclared identifier"; break;
+        case 7: message = "Become symbol not found."; break;
     }
     printf("Error hit! %s \n", message);
     exit(1);
