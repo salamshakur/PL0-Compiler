@@ -1,7 +1,6 @@
 void parser()
 {
     symTable = malloc(sizeof(symbol) * 100000);
-
     program();
 }
 
@@ -16,10 +15,17 @@ void program()
 void block()
 {
     if(lexemes->arr[lexCount].tokenType == constsym)
+    {
         constDeclaration();
+        lexCount++;
+    }
+
     if(lexemes->arr[lexCount].tokenType == varsym)
+    {
         varDeclaration();
-    
+        lexCount++;
+    }
+
     statementDeclaration();
 }
 
@@ -46,9 +52,10 @@ void constDeclaration()
             ERROR_Syn(4);
         
         int val = atoi(lexemes->arr[lexCount].name);
-        lexCount++;
 
         insert(1, name, val, 0, 0, 0, NA);
+
+        lexCount++;
 
         memset(name, 0, sizeof(name));
 
@@ -56,8 +63,6 @@ void constDeclaration()
 
     if(lexemes->arr[lexCount].tokenType != semicolonsym)
         ERROR_Syn(5);
-    
-    lexCount++;
 }
 
 
@@ -77,14 +82,14 @@ void varDeclaration()
 
         insert(2, name, 0, 0, addrCount, 0);
 
+        lexCount++;
+
         addrCount++;
 
     } while (lexemes->arr[lexCount].tokenType == commasym);
     
     if(lexemes->arr[lexCount].tokenType != semicolonsym)
-        exit(1);
-    
-    lexCount++;
+        exit(1);    
 }
 
 void statementDeclaration()
@@ -139,15 +144,21 @@ void expressionDeclaration()
     if(lexemes->arr[lexCount].tokenType == plussym || lexemes->arr[lexCount].tokenType == minussym)
         lexCount++;
     
-    do 
+    do
+    {
         termDeclaration();
+        lexCount++;
+    } 
     while(lexemes->arr[lexCount].tokenType == plussym || lexemes->arr[lexCount].tokenType == minussym);
 }
 
 void termDeclaration()
 {
     do
+    {
         factorDeclaration();
+        lexCount++;
+    }
     while (lexemes->arr[lexCount].tokenType == multsym || lexemes->arr[lexCount].tokenType == slashsym);
     
 }
@@ -156,7 +167,7 @@ void factorDeclaration()
 {
     if(lexemes->arr[lexCount].tokenType == identsym)
     {
-        
+        int n = lookUp(lexemes->arr[lexCount].name);
     }
 
     if(lexemes->arr[lexCount].tokenType == numbersym)
@@ -168,8 +179,6 @@ void factorDeclaration()
     {
         
     }
-
-    lexCount++;
 }
 
 
@@ -192,7 +201,6 @@ void insert(int kind, char name[], int val, int lvl, int addr, int mark)
     symTable[symCount].addr  = addr;
     symTable[symCount].mark  = mark;
     strcpy(symTable[symCount].name, name);
-    symCount++;
 }
 
 void ERROR_Syn(int val)
