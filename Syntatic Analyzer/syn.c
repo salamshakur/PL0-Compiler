@@ -25,33 +25,37 @@ void block()
 
 void constDeclaration()
 {
+    name = malloc(sizeof(char) * (maxChar + 1));
     do
     {
         lexCount++;
 
         if(lexemes->arr[lexCount].tokenType != identsym)
-            exit(1);
-        
-        char * name = lexemes->arr[lexCount].name;
+            ERROR_Syn(1);
+
+        (lookUp(lexemes->arr[lexCount].name) == -1)? strcpy(name, lexemes->arr[lexCount].name) : ERROR_Syn(2);
+
         lexCount++;
 
         if(lexemes->arr[lexCount].tokenType != eqsym)
-            exit(1);
+            ERROR_Syn(3);
         
         lexCount++;
 
         if(lexemes->arr[lexCount].tokenType != numbersym)
-            exit(1);
+            ERROR_Syn(4);
         
         int val = atoi(lexemes->arr[lexCount].name);
         lexCount++;
 
         insert(1, name, val, 0, 0, 0, NA);
 
+        memset(name, 0, sizeof(name));
+
     } while (lexemes->arr[lexCount].tokenType == commasym);
-    
+
     if(lexemes->arr[lexCount].tokenType != semicolonsym)
-        exit(1);
+        ERROR_Syn(5);
     
     lexCount++;
 }
@@ -59,7 +63,7 @@ void constDeclaration()
 
 void varDeclaration()
 {
-    int addrCount = 4;
+    name = malloc(sizeof(char) * (maxChar + 1));
     do
     {
         lexCount++;
@@ -67,7 +71,8 @@ void varDeclaration()
         if(lexemes->arr[lexCount].tokenType != identsym)
             exit(1);
         
-        char * name = lexemes->arr[lexCount].name;
+        (lookUp(lexemes->arr[lexCount].name) == -1)? strcpy(name, lexemes->arr[lexCount].name) : ERROR_Syn(2);
+        
         lexCount++;
 
         insert(2, name, 0, 0, addrCount, 0);
@@ -86,13 +91,19 @@ void statementDeclaration()
 {
     if(lexemes->arr[lexCount].tokenType == identsym)
     {
-        if(lexemes->arr[lexCount].tokenType != eqsym)
+        int n = lookUp(lexemes->arr[lexCount].name);
+
+        if(n == -1)
+            exit(1); // doesn't exist
+
+        lexCount++;
+
+        if(lexemes->arr[lexCount].tokenType != becomessym)
             exit(1);
         
         lexCount++;
 
-        if(!checkExpression())
-            exit(1);
+        expressionDeclaration();
     }
 
     
@@ -101,28 +112,54 @@ void statementDeclaration()
 
 
 
-int checkExpression()
+void expressionDeclaration()
 {
     if(lexemes->arr[lexCount].tokenType == plussym || lexemes->arr[lexCount].tokenType == minussym)
-        checkTerm();
+    {
+        lexCount++;
+        termDeclaration();
+    }
     
-    return 1;
 }
 
-void checkTerm()
+void termDeclaration()
 {
     do
     {
-        checkFactor();
+        factorDeclaration();
     } while (1);
     
 }
 
-void checkFactor()
+void factorDeclaration()
 {
+    if(lexemes->arr[lexCount].tokenType == identsym)
+    {
 
+    }
+
+    if(lexemes->arr[lexCount].tokenType == numbersym)
+    {
+
+    }
+
+    if(lexemes->arr[lexCount].tokenType == lparentsym)
+    {
+        
+    }
 }
 
+
+int lookUp(char name[])
+{
+    int n = symCount;
+    for(int i = 0; i < n; n--)
+    {
+        if(strcmp(name, symTable[n].name) == 0)
+            return n;
+    }
+    return -1;
+}
 
 void insert(int kind, char name[], int val, int lvl, int addr, int mark)
 {
@@ -132,6 +169,20 @@ void insert(int kind, char name[], int val, int lvl, int addr, int mark)
     symTable[symCount].addr  = addr;
     symTable[symCount].mark  = mark;
     strcpy(symTable[symCount].name, name);
-    printf("kind - %d \t name - %s \t addr - %d\n", kind, name, addr);
     symCount++;
+}
+
+void ERROR_Syn(int val)
+{
+    char * message;
+    switch(val)
+    {
+        case 1: message = "An identifier was not found.";  break;
+        case 2: message = "Name has already been declared."; break;
+        case 3: message = "Equal symbol not found."; break;
+        case 4: message = "Number not found."; break;
+        case 5: message = "Semicolon not found."; break;
+    }
+    printf("Error hit! %s \n", message);
+    exit(1);
 }

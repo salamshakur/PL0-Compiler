@@ -25,5 +25,7 @@ int      hlt;  // halt flag
 
 /* for syn.c */
 symbol * symTable;
-int      symCount = 1;
-int      lexCount = 0;
+int      symCount  = 1;
+int      lexCount  = 0;
+int      addrCount = 4;
+char   * name;

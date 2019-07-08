@@ -15,7 +15,7 @@ void scanner()
             while((isalnum(c)) && !ispunct(c))
             {   
                 if(countId >= maxChar)
-                    error(3);
+                    ERROR_Lex(3);
                 tempID[countId] = c;
                 countId++;
                 c = fgetc(fp);
@@ -37,9 +37,9 @@ void scanner()
             while(!ispunct(c) && !isspace(c))
             {
                 if(isalpha(c))
-                    error(1);
+                    ERROR_Lex(1);
                 if(countNum >= maxInt)
-                    error(2);
+                    ERROR_Lex(2);
                 tempNum[countNum] = c;
                 countNum++;
                 c = fgetc(fp);
@@ -67,7 +67,7 @@ void scanner()
 
                 if(c != '=')
                 {
-                    error(4);
+                    ERROR_Lex(4);
                 }
                 else
                 {  
@@ -115,7 +115,7 @@ void scanner()
                         {   
                             c = fgetc(fp);
                             if(feof(fp))
-                                error(5);
+                                ERROR_Lex(5);
                         }
 
                         c = fgetc(fp);
@@ -139,7 +139,7 @@ void scanner()
 
                 if(c != '=')
                 {
-                    error(4);
+                    ERROR_Lex(4);
                 }
                 else
                 {
@@ -304,7 +304,7 @@ int getSpecial(char name[maxSym])
     if (strcmp(name, "<>")  == 0) return neqsym;
     if (strcmp(name, "<=")  == 0) return leqsym;
     if (strcmp(name, ">=")  == 0) return geqsym;
-    error(4);
+    ERROR_Lex(4);
 }
 
 void printSource()
@@ -318,7 +318,7 @@ void printSource()
         if(c != EOF)
             printf("%c", c);
     }
-    printf("\n");
+    printf("\n\n");
 
     rewind(fp);
 }
@@ -332,7 +332,7 @@ void printTable()
     {
         printf("%s \t %d \n", lexemes->arr[i].name, lexemes->arr[i].tokenType);
     }
-    printf("\n");
+    printf("\n\n");
 }
 
 void printList()
@@ -347,10 +347,10 @@ void printList()
         else
             printf("%d ", tk.tokenType);
     }
-    printf("\n");
+    printf("\n\n");
 }
 
-void error(int val)
+void ERROR_Lex(int val)
 {
     char * message;
     switch(val)
@@ -359,7 +359,7 @@ void error(int val)
         case 2: message = "Number too long."; break;
         case 3: message = "Name too long."; break;
         case 4: message = "Invalid symbols."; break;
-        case 5: message = "Comment not properly closed"; break;
+        case 5: message = "Comment not properly closed."; break;
     }
     printf("Error hit! %s \n", message);
     exit(1);

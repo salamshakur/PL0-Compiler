@@ -8,7 +8,7 @@ int     getReserved(char * name);
 int     getSpecial(char * name);
 void    printTable();
 void    printList();
-void    error(int val);
+void    ERROR_Lex(int val);
 
 /* for vm.c */
 void    virtual();
@@ -30,7 +30,9 @@ void    block();
 void    constDeclaration();
 void    varDeclaration();
 void    statementDeclaration();
-int     checkExpression();
-void    checkTerm();
-void    checkFactor();
+void    expressionDeclaration();
+void    termDeclaration();
+void    factorDeclaration();
+int     lookUp();
 void    insert();
+void    ERROR_Syn(int val);
