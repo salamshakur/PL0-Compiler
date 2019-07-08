@@ -10,8 +10,6 @@ void fileReader(int argc, char ** argv)
         printf("Error: No input file found.\n");
         exit(1);
     }
-    else if(argc >= 2)
-        fp = fopen(argv[1], "r");
-    else
-        fp = fopen(argv[0], "r");
+    fp = fopen(argv[1], "r");
+    if(fp == NULL) exit(1);
 }

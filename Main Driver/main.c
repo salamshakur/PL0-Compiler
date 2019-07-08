@@ -8,7 +8,7 @@
 void main(int argc, char ** argv)
 {
     fileReader(argc, argv);
-
+    
     scanner();
     parser();
     //virtual();

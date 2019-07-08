@@ -3,9 +3,9 @@ void scanner()
     lexemes = malloc(sizeof(table));
     arr = malloc(sizeof(token) * 100000);
     lexemes->arr = arr;
-
+    
     printSource();
-
+    
     while(!feof(fp))
     {
         c = fgetc(fp);

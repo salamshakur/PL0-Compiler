@@ -46,7 +46,7 @@ void constDeclaration()
         int val = atoi(lexemes->arr[lexCount].name);
         lexCount++;
 
-        insert(1, name, val, 0, 0, NA, 0);
+        insert(1, name, val, 0, 0, 0, NA);
 
     } while (lexemes->arr[lexCount].tokenType == commasym);
     
