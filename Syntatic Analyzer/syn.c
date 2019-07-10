@@ -11,7 +11,8 @@ void program()
     lexCount++;
 
     if(lexemes->arr[lexCount].tokenType != periodsym)
-        exit(1);
+        ERROR_Syn(13);
+    printf("No errors, program is syntactically correct\n");
 }
 
 void block()
@@ -170,6 +171,7 @@ void statementDeclaration()
 
     else
     {
+        lexCount--; // test
         return;
     }
 }
@@ -199,13 +201,19 @@ void expressionDeclaration()
 {
     if(lexemes->arr[lexCount].tokenType == plussym || lexemes->arr[lexCount].tokenType == minussym)
         lexCount++;
+
+    termDeclaration();
     
-    do
+    lexCount++;
+
+    while(lexemes->arr[lexCount].tokenType == plussym || lexemes->arr[lexCount].tokenType == minussym)
     {
+        lexCount++;
+
         termDeclaration();
+
         lexCount++;
     } 
-    while(lexemes->arr[lexCount].tokenType == plussym || lexemes->arr[lexCount].tokenType == minussym);
 
     lexCount--;
 }
@@ -250,12 +258,18 @@ void rel_opDeclaration()
 
 void termDeclaration()
 {
-    do
+    factorDeclaration();
+
+    lexCount++;
+
+    while (lexemes->arr[lexCount].tokenType == multsym || lexemes->arr[lexCount].tokenType == slashsym)
     {
+        lexCount++;
+
         factorDeclaration();
+
         lexCount++;
     }
-    while (lexemes->arr[lexCount].tokenType == multsym || lexemes->arr[lexCount].tokenType == slashsym);
     
     lexCount--;
 }
@@ -264,9 +278,9 @@ void factorDeclaration()
 {
     if(lexemes->arr[lexCount].tokenType == identsym)
     {
-        int n = lookUp(lexemes->arr[lexCount].name);
+        int i = lookUp(lexemes->arr[lexCount].name);
 
-        if(n == -1)
+        if(i == -1)
             ERROR_Syn(6);
         
     }
@@ -287,8 +301,6 @@ void factorDeclaration()
         if(lexemes->arr[lexCount].tokenType != rparentsym)
             ERROR_Syn(8);
     }
-
-    lexCount++;
 }
 
 
@@ -311,6 +323,7 @@ void insert(int kind, char name[], int val, int lvl, int addr, int mark)
     symTable[symCount].addr  = addr;
     symTable[symCount].mark  = mark;
     strcpy(symTable[symCount].name, name);
+    symCount++;
 }
 
 void ERROR_Syn(int val)
@@ -330,6 +343,7 @@ void ERROR_Syn(int val)
         case 10: message = "Then symbol not found."; break;
         case 11: message = "Do symbol not found."; break;
         case 12: message = "Relational Operation not found."; break;
+        case 13: message = "Period symbol not found."; break;
     }
     printf("Error hit! %s \n", message);
     exit(1);

@@ -1,0 +1,11 @@
+const x = 5, y = 6;
+var a, b, c;
+begin
+a := b + c;
+b := y + x;
+if a < b then
+    a := b + c;
+while b > x do
+    a := a + 5;
+c := 4;
+end.
