@@ -8,6 +8,8 @@ void program()
 {
     block();
 
+    lexCount++;
+
     if(lexemes->arr[lexCount].tokenType != periodsym)
         exit(1);
 }
@@ -65,7 +67,6 @@ void constDeclaration()
         ERROR_Syn(5);
 }
 
-
 void varDeclaration()
 {
     name = malloc(sizeof(char) * (maxChar + 1));
@@ -78,13 +79,10 @@ void varDeclaration()
         
         (lookUp(lexemes->arr[lexCount].name) == -1)? strcpy(name, lexemes->arr[lexCount].name) : ERROR_Syn(2);
 
-        lexCount++;
-
         insert(2, name, 0, 0, addrCount, 0);
+        addrCount++;
 
         lexCount++;
-
-        addrCount++;
 
     } while (lexemes->arr[lexCount].tokenType == commasym);
     
@@ -96,9 +94,9 @@ void statementDeclaration()
 {
     if(lexemes->arr[lexCount].tokenType == identsym)
     {
-        int n = lookUp(lexemes->arr[lexCount].name);
+        int i = lookUp(lexemes->arr[lexCount].name);
 
-        if(n == -1) ERROR_Syn(6);
+        if(i == -1) ERROR_Syn(6);
 
         lexCount++;
 
@@ -109,35 +107,93 @@ void statementDeclaration()
         expressionDeclaration();
     }
 
-    if(lexemes->arr[lexCount].tokenType == beginsym)
+    else if(lexemes->arr[lexCount].tokenType == beginsym)
     {
+        do
+        {
+            lexCount++;
 
-    }
+            statementDeclaration();
 
-    if(lexemes->arr[lexCount].tokenType == ifsym)
-    {
+            lexCount++;
 
-    }
-    
-    if(lexemes->arr[lexCount].tokenType == whilesym)
-    {
+        } while (lexemes->arr[lexCount].tokenType == semicolonsym);
         
+        if(lexemes->arr[lexCount].tokenType != endsym) ERROR_Syn(9);
+    }
+
+    else if(lexemes->arr[lexCount].tokenType == ifsym)
+    {   
+        lexCount++;
+
+        conditionDeclaration();
+
+        lexCount++;
+
+        if(lexemes->arr[lexCount].tokenType != thensym) ERROR_Syn(10);
+
+        lexCount++;
+
+        statementDeclaration();
+
     }
     
-    if(lexemes->arr[lexCount].tokenType == readsym)
+    else if(lexemes->arr[lexCount].tokenType == whilesym)
     {
+        lexCount++;
+
+        conditionDeclaration();
+
+        lexCount++;
+
+        if(lexemes->arr[lexCount].tokenType != dosym) ERROR_Syn(11);
+
+        lexCount++;
+
+        statementDeclaration();
+    }
     
+    else if(lexemes->arr[lexCount].tokenType == readsym)
+    {
+        lexCount++;
+
+        if(lexemes->arr[lexCount].tokenType != identsym) ERROR_Syn(1);
     }
 
     
-    if(lexemes->arr[lexCount].tokenType == writesym)
+    else if(lexemes->arr[lexCount].tokenType == writesym)
     {
-        
+        lexCount++;
+
+        if(lexemes->arr[lexCount].tokenType != identsym) ERROR_Syn(1);
+    }
+
+    else
+    {
+        return;
     }
 }
 
+void conditionDeclaration()
+{
+    if(lexemes->arr[lexCount].tokenType == oddsym)
+    {
+        lexCount++;
+        expressionDeclaration();
+    }
+    else
+    {
+        expressionDeclaration();
 
+        lexCount++;
 
+        rel_opDeclaration();
+
+        lexCount++;
+
+        expressionDeclaration();
+    }
+}
 
 void expressionDeclaration()
 {
@@ -150,6 +206,46 @@ void expressionDeclaration()
         lexCount++;
     } 
     while(lexemes->arr[lexCount].tokenType == plussym || lexemes->arr[lexCount].tokenType == minussym);
+
+    lexCount--;
+}
+
+void rel_opDeclaration()
+{
+    if(lexemes->arr[lexCount].tokenType == eqsym)
+    {
+
+    }
+    
+    else if(lexemes->arr[lexCount].tokenType == neqsym)
+    {
+
+    }
+        
+    else if(lexemes->arr[lexCount].tokenType == lessym)
+    {
+        
+    }
+        
+    else if(lexemes->arr[lexCount].tokenType == leqsym)
+    {
+        
+    }
+        
+    else if(lexemes->arr[lexCount].tokenType == gtrsym)
+    {
+        
+    }
+        
+    else if(lexemes->arr[lexCount].tokenType == geqsym)
+    {
+        
+    }
+    
+    else
+    {
+        ERROR_Syn(12);
+    }
 }
 
 void termDeclaration()
@@ -161,6 +257,7 @@ void termDeclaration()
     }
     while (lexemes->arr[lexCount].tokenType == multsym || lexemes->arr[lexCount].tokenType == slashsym);
     
+    lexCount--;
 }
 
 void factorDeclaration()
@@ -168,17 +265,30 @@ void factorDeclaration()
     if(lexemes->arr[lexCount].tokenType == identsym)
     {
         int n = lookUp(lexemes->arr[lexCount].name);
+
+        if(n == -1)
+            ERROR_Syn(6);
+        
     }
 
     if(lexemes->arr[lexCount].tokenType == numbersym)
     {
-
+        // use later for object code
     }
 
     if(lexemes->arr[lexCount].tokenType == lparentsym)
     {
-        
+        lexCount++;
+
+        expressionDeclaration();
+
+        lexCount++;
+
+        if(lexemes->arr[lexCount].tokenType != rparentsym)
+            ERROR_Syn(8);
     }
+
+    lexCount++;
 }
 
 
@@ -215,6 +325,11 @@ void ERROR_Syn(int val)
         case 5: message = "Semicolon not found."; break;
         case 6: message = "Undeclared identifier"; break;
         case 7: message = "Become symbol not found."; break;
+        case 8: message = "Right paranthesis not found."; break;
+        case 9: message = "End symbol not found."; break;
+        case 10: message = "Then symbol not found."; break;
+        case 11: message = "Do symbol not found."; break;
+        case 12: message = "Relational Operation not found."; break;
     }
     printf("Error hit! %s \n", message);
     exit(1);
