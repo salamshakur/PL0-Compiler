@@ -1,17 +1,17 @@
 void parser()
 {
-    code = malloc(sizeof(instr)  * MAX_CODE_LENGTH); // create array to hold PL0 assembly
-    symTable = malloc(sizeof(symbol) * 100000); // create symbol table to store const, var, procedures
+    code = malloc(sizeof(instr)  * MAX_CODE_LENGTH); 
+    symTable = malloc(sizeof(symbol) * 100000); 
 
-    program(); // check EBNF program
+    program(); 
 
-    for(int i = 0; i < codeCount; i++)
-        printf("%d %d %d %d \n", code[i].op, code[i].r, code[i].l, code[i].m);
+    // for(int i = 0; i < codeCount; i++)
+    //     printf("%d %d %d %d \n", code[i].op, code[i].r, code[i].l, code[i].m);
 }
 
 void program()
 {
-    block(); // check EBNF block
+    block();
 
     lexCount++;
 
@@ -27,176 +27,176 @@ void block()
 {
     emit(JMP, 0, 0, 0);
 
-    if(lexemes->arr[lexCount].tokenType == constsym) // check if token is a const
+    if(lexemes->arr[lexCount].tokenType == constsym) 
     {
-        constDeclaration(); // check EBNF const
+        constDeclaration(); 
 
-        lexCount++; // get next token
+        lexCount++; 
     }
 
-    if(lexemes->arr[lexCount].tokenType == varsym) // check if token is a var
+    if(lexemes->arr[lexCount].tokenType == varsym) 
     {
-        varDeclaration(); // check EBNF var
+        varDeclaration(); 
 
-        lexCount++; // get next token
+        lexCount++; 
     }
 
     code[0].m = codeCount;
 
     emit(INC, 0, 0, addrCount);
 
-    statementDeclaration(); // check EBNF statement
+    statementDeclaration(); 
 }
 
 void constDeclaration()
 {
-    name = malloc(sizeof(char) * (maxChar + 1)); // create a string to hold const name
+    name = malloc(sizeof(char) * (maxChar + 1)); 
     do
     {
-        lexCount++; // get next token
+        lexCount++; 
 
-        if(lexemes->arr[lexCount].tokenType != identsym) // check if token is an identifier
+        if(lexemes->arr[lexCount].tokenType != identsym) 
             ERROR_Syn(1);
 
-        (lookUp(lexemes->arr[lexCount].name) == -1)? strcpy(name, lexemes->arr[lexCount].name) : ERROR_Syn(2); // check if identifier already exist
+        (lookUp(lexemes->arr[lexCount].name) == -1)? strcpy(name, lexemes->arr[lexCount].name) : ERROR_Syn(2); 
 
-        lexCount++; // get next token
+        lexCount++; 
 
-        if(lexemes->arr[lexCount].tokenType != eqsym) // check if token is an equal symbol
+        if(lexemes->arr[lexCount].tokenType != eqsym) 
             ERROR_Syn(3);
         
-        lexCount++; // get next token
+        lexCount++; 
 
-        if(lexemes->arr[lexCount].tokenType != numbersym) // check if token is a number
+        if(lexemes->arr[lexCount].tokenType != numbersym) 
             ERROR_Syn(4);
         
-        int val = atoi(lexemes->arr[lexCount].name); // convert the number from string into an int
+        int val = atoi(lexemes->arr[lexCount].name); 
 
-        insert(1, name, val, 0, 0, 0, NA); // insert const into the symbol table
+        insert(1, name, val, 0, 0, 0, NA); 
 
-        lexCount++; // get next token
+        lexCount++; 
 
-        memset(name, 0, sizeof(name)); // reset name string to reuse again
+        memset(name, 0, sizeof(name)); 
 
-    } while (lexemes->arr[lexCount].tokenType == commasym); // continue logic as long as there is a comma to be found
+    } while (lexemes->arr[lexCount].tokenType == commasym); 
 
-    if(lexemes->arr[lexCount].tokenType != semicolonsym) // check if the end of the const line is a semicolon
+    if(lexemes->arr[lexCount].tokenType != semicolonsym) 
         ERROR_Syn(5);
 }
 
 void varDeclaration()
 {
-    name = malloc(sizeof(char) * (maxChar + 1)); // create a string to hold var name
+    name = malloc(sizeof(char) * (maxChar + 1)); 
     do
     {
-        lexCount++; // get next token
+        lexCount++; 
 
-        if(lexemes->arr[lexCount].tokenType != identsym) // check if token is an identifier
+        if(lexemes->arr[lexCount].tokenType != identsym) 
             ERROR_Syn(1);
         
-        (lookUp(lexemes->arr[lexCount].name) == -1)? strcpy(name, lexemes->arr[lexCount].name) : ERROR_Syn(2); // check if identifier already exist
+        (lookUp(lexemes->arr[lexCount].name) == -1)? strcpy(name, lexemes->arr[lexCount].name) : ERROR_Syn(2); 
 
-        insert(2, name, 0, 0, addrCount, 0); // insert var into the symbol table
+        insert(2, name, 0, 0, addrCount, 0); 
 
-        addrCount++; // increment the address for the next var
+        addrCount++; 
 
-        lexCount++; // get next token
+        lexCount++; 
 
-    } while (lexemes->arr[lexCount].tokenType == commasym); // continue logic as long as there is a comma to be found
+    } while (lexemes->arr[lexCount].tokenType == commasym); 
     
-    if(lexemes->arr[lexCount].tokenType != semicolonsym) // check if the end of the var line is a semicolon
+    if(lexemes->arr[lexCount].tokenType != semicolonsym) 
         ERROR_Syn(5);  
 }
 
 void statementDeclaration()
 {
-    if(lexemes->arr[lexCount].tokenType == identsym) // check if token is an identifier
+    if(lexemes->arr[lexCount].tokenType == identsym) 
     {
-        int i = lookUp(lexemes->arr[lexCount].name); // check if identifier has been declared
+        int i = lookUp(lexemes->arr[lexCount].name); 
             
         if(i == -1) ERROR_Syn(6); 
 
-        lexCount++; // get next token
+        lexCount++; 
 
-        if(lexemes->arr[lexCount].tokenType != becomessym) // check if token is a become symbol
+        if(lexemes->arr[lexCount].tokenType != becomessym) 
             ERROR_Syn(7); 
         
-        lexCount++; // get next token
+        lexCount++; 
 
-        expressionDeclaration(); // check EBNF expression
+        expressionDeclaration(); 
 
         emit(STO, --regPointer, 0, symTable[i].addr);
     }
 
-    else if(lexemes->arr[lexCount].tokenType == beginsym) // or if it's a begin 
+    else if(lexemes->arr[lexCount].tokenType == beginsym)
     {
         do
         {
-            lexCount++; // get next token
+            lexCount++; 
 
-            statementDeclaration(); // recurse EBNF statement
+            statementDeclaration(); 
 
-            lexCount++; // get next token
+            lexCount++; 
 
-        } while (lexemes->arr[lexCount].tokenType == semicolonsym); // continue logic as long as there is a semicolon to be found
+        } while (lexemes->arr[lexCount].tokenType == semicolonsym); 
         
-        if(lexemes->arr[lexCount].tokenType != endsym) // check if begin block ended with end token
+        if(lexemes->arr[lexCount].tokenType != endsym) 
             ERROR_Syn(9);
     }
 
-    else if(lexemes->arr[lexCount].tokenType == ifsym) // or if it's an if statement
+    else if(lexemes->arr[lexCount].tokenType == ifsym) 
     {   
-        lexCount++; // get next token
+        lexCount++; 
 
-        conditionDeclaration(); // check EBNF condition
+        conditionDeclaration(); 
 
-        lexCount++; // get next token
+        lexCount++; 
 
-        if(lexemes->arr[lexCount].tokenType != thensym) // check if token is a then symbol
+        if(lexemes->arr[lexCount].tokenType != thensym) 
             ERROR_Syn(10);
 
         int tempIndex = codeCount;
 
         emit(JPC, regPointer, 0, 0);
 
-        lexCount++; // get next token
+        lexCount++; 
 
-        statementDeclaration(); // recurse statement
+        statementDeclaration(); 
 
         code[tempIndex].m = codeCount;
     }
     
-    else if(lexemes->arr[lexCount].tokenType == whilesym) // or if it's a while loop
+    else if(lexemes->arr[lexCount].tokenType == whilesym) 
     {
         int tempIndex = codeCount;
 
-        lexCount++; // get next token
+        lexCount++; 
 
-        conditionDeclaration(); // check EBNF condition
+        conditionDeclaration(); 
 
         int tempIndex2 = codeCount;
 
         emit(JPC, regPointer, 0, 0);
 
-        lexCount++; // get next token
+        lexCount++; 
 
-        if(lexemes->arr[lexCount].tokenType != dosym) // check if token is a do symbol
+        if(lexemes->arr[lexCount].tokenType != dosym) 
             ERROR_Syn(11);
 
-        lexCount++; // get next token
+        lexCount++; 
 
-        statementDeclaration(); // recurse statement
+        statementDeclaration(); 
 
         emit(JMP, 0, 0, tempIndex);
 
         code[tempIndex2].m = codeCount;
     }
     
-    else if(lexemes->arr[lexCount].tokenType == readsym) // or if it's a read
+    else if(lexemes->arr[lexCount].tokenType == readsym) 
     {
-        lexCount++; // get next token
+        lexCount++; 
 
-        if(lexemes->arr[lexCount].tokenType != identsym) // check if token is a identifier
+        if(lexemes->arr[lexCount].tokenType != identsym) 
             ERROR_Syn(1);
 
         int i = lookUp(lexemes->arr[lexCount].name);
@@ -214,11 +214,11 @@ void statementDeclaration()
     }
 
     
-    else if(lexemes->arr[lexCount].tokenType == writesym) // or if it's a write
+    else if(lexemes->arr[lexCount].tokenType == writesym) 
     {
-        lexCount++; // get next token
+        lexCount++; 
 
-        if(lexemes->arr[lexCount].tokenType != identsym) // check if token is an identifier
+        if(lexemes->arr[lexCount].tokenType != identsym) 
             ERROR_Syn(1);
 
         int i = lookUp(lexemes->arr[lexCount].name);
@@ -234,7 +234,7 @@ void statementDeclaration()
         emit(SIO, 0, 0, 1);
     }
 
-    else // else put back token and return
+    else 
     {
         lexCount--;
 
