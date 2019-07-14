@@ -270,13 +270,13 @@ int getReserved(char name[maxChar])
 {
     if (strcmp(name, "const")     == 0) return constsym;
     if (strcmp(name, "var")       == 0) return varsym;
-    if (strcmp(name, "procedure") == 0) return procsym;
-    if (strcmp(name, "call")      == 0) return callsym;
+    //if (strcmp(name, "procedure") == 0) return procsym;
+    //if (strcmp(name, "call")      == 0) return callsym;
     if (strcmp(name, "begin")     == 0) return beginsym;
     if (strcmp(name, "end")       == 0) return endsym;
     if (strcmp(name, "if")        == 0) return ifsym;
     if (strcmp(name, "then")      == 0) return thensym;
-    if (strcmp(name, "else")      == 0) return elsesym;
+    //if (strcmp(name, "else")      == 0) return elsesym;
     if (strcmp(name, "while")     == 0) return whilesym;
     if (strcmp(name, "do")        == 0) return dosym;
     if (strcmp(name, "read")      == 0) return readsym;
