@@ -40,3 +40,12 @@ typedef struct symbol
     int  addr;                // M address
     int  mark;                // to indicate that code has been generated already for a block
 } symbol;
+
+typedef enum opcodes
+{
+    LIT = 1, RTN, LOD, STO, 
+    CAL, INC, JMP, JPC, SIO, 
+    NEG, ADD, SUB, MUL, DIV, 
+    ODD, MOD, EQL, NEQ, 
+    LSS, LEQ, GTR, GEQ
+} opcodes;

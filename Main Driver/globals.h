@@ -25,9 +25,10 @@ int      hlt;  // halt flag
 
 /* for syn.c */
 symbol * symTable;
-instr  * asmTable;
-int      symCount  = 1;
-int      lexCount  = 0;
-int      addrCount = 4;
-int      asmCount  = 0;
+instr  * code;
+int      symCount   = 1;
+int      lexCount   = 0;
+int      addrCount  = 4;
+int      codeCount  = 0;
 char   * name;
+int      regPointer = 0;

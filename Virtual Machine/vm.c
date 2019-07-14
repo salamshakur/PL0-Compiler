@@ -69,7 +69,7 @@ char * getOperationName(int op)
             return "jmp";
         case 8:         
             return "jpc";
-        case 9:          
+        case 9:         
             return "sio";
         case 10:         
             return "sio";
