@@ -1,5 +1,6 @@
 void parser()
 {
+    asmTable = malloc(sizeof(instr)  * MAX_CODE_LENGTH);
     symTable = malloc(sizeof(symbol) * 100000);
     program();
 }
@@ -324,6 +325,15 @@ void insert(int kind, char name[], int val, int lvl, int addr, int mark)
     symTable[symCount].mark  = mark;
     strcpy(symTable[symCount].name, name);
     symCount++;
+}
+
+void createAssembly(int op, int r, int l, int m)
+{
+    asmTable[asmCount].op = op;
+    asmTable[asmCount].r  = r;
+    asmTable[asmCount].l  = l;
+    asmTable[asmCount].m  = m;
+    asmCount++;
 }
 
 void ERROR_Syn(int val)

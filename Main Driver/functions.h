@@ -37,4 +37,5 @@ void    termDeclaration();
 void    factorDeclaration();
 int     lookUp();
 void    insert();
+void    createAssembly(int op, int r, int l, int m);
 void    ERROR_Syn(int val);

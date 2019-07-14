@@ -20,7 +20,7 @@ typedef struct table {
 
 //========================================================================\\
 
-/* for vm.c */
+/* for vm.c && syn.c */
 typedef struct instr {
     int op;  // operation code
     int r;   // register
