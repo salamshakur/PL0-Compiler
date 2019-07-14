@@ -43,9 +43,9 @@ typedef struct symbol
 
 typedef enum opcodes
 {
-    LIT = 1, RTN, LOD, STO, 
-    CAL, INC, JMP, JPC, SIO, 
-    NEG, ADD, SUB, MUL, DIV, 
-    ODD, MOD, EQL, NEQ, 
-    LSS, LEQ, GTR, GEQ
+    LIT = 1, RTN = 2, LOD = 3, STO = 4, 
+    CAL = 5, INC = 6, JMP = 7, JPC = 8, SIO = 9, 
+    NEG = 12, ADD = 13, SUB = 14, MUL = 15, DIV = 16, 
+    ODD = 17, MOD = 18, EQL = 19, NEQ = 20, 
+    LSS = 21, LEQ = 22, GTR = 23, GEQ = 24
 } opcodes;

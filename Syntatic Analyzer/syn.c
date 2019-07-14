@@ -12,7 +12,7 @@ void parser()
 void program()
 {
     block();
-
+    
     lexCount++;
 
     if(lexemes->arr[lexCount].tokenType != periodsym)
@@ -427,6 +427,16 @@ void emit(int op, int r, int l, int m)
     if(codeCount > MAX_CODE_LENGTH)
         ERROR_Syn(14);
     
+    if(op == SIO)
+    {
+        if(m == 1)
+            op = 9;
+        if(m == 2)
+            op = 10;
+        if(m == 3)
+            op = 11;
+    }
+
     code[codeCount].op = op;
     code[codeCount].r  = r;
     code[codeCount].l  = l;
@@ -457,6 +467,6 @@ void ERROR_Syn(int val)
         case 16: message = "Constant/Variable not found."; break;
         case 17: message = "Identifier/Number/Expression not found."; break;
     }
-    printf("Error hit! %s \n", message);
+    printf("***** Error number %d, %s \n", val, message);
     exit(1);
 }

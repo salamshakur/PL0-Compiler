@@ -1,0 +1,7 @@
+const a = 0, b = 5;
+var x, y;
+begin
+    while a < b 
+    do
+        x:=x+1;
+end.
