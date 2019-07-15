@@ -4,9 +4,6 @@ void parser()
     symTable = malloc(sizeof(symbol) * 100000); 
 
     program(); 
-
-    // for(int i = 0; i < codeCount; i++)
-    //     printf("%d %d %d %d \n", code[i].op, code[i].r, code[i].l, code[i].m);
 }
 
 void program()

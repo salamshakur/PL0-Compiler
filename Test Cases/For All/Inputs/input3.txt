@@ -1,0 +1,6 @@
+const a = 5, b = 3;
+    var c, d;
+begin
+    while b > d do
+        d := (a + b);
+end

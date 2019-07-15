@@ -1,0 +1,115 @@
+
+Source Program: 
+const
+
+***** Error number 1, An identifier was not found. 
+
+
+Source Program: 
+const a = 5, a = 6;
+
+***** Error number 2, Name has already been declared. 
+
+
+Source Program: 
+const a = 5, b := 6;
+
+***** Error number 3, Equal symbol not found. 
+
+
+Source Program: 
+const a = 5, b = z;
+
+***** Error number 4, Number not found. 
+
+
+Source Program: 
+const a = 5, b = 3
+    var c;
+
+***** Error number 5, Semicolon not found. 
+
+
+Source Program: 
+const a = 5, b = 3;
+    var c, d;
+begin
+    e := a + b; 
+end.
+
+***** Error number 6, Undeclared identifier 
+
+
+Source Program: 
+const a = 5, b = 3;
+    var c, d;
+begin
+    d = a + b; 
+end.
+
+***** Error number 7, Become symbol not found. 
+
+
+Source Program: 
+const a = 5, b = 3;
+    var c, d;
+begin
+    d := (a + b; 
+end.
+
+***** Error number 8, Right paranthesis not found. 
+
+
+Source Program: 
+const a = 5, b = 3;
+    var c, d;
+begin
+    d := (a + b); 
+
+***** Error number 9, End symbol not found. 
+
+
+Source Program: 
+const a = 5, b = 3;
+    var c, d;
+begin
+    if c < a
+        d := (a + b); 
+end.
+
+***** Error number 10, Then symbol not found. 
+
+
+Source Program: 
+const a = 5, b = 3;
+    var c, d;
+begin
+    while b > d
+        if c < a then
+            d := (a + b); 
+end.
+
+***** Error number 11, Do symbol not found. 
+
+
+Source Program: 
+const a = 5, b = 3;
+    var c, d;
+begin
+    while b  d do
+        d := (a + b); 
+end.
+
+***** Error number 12, Relational Operation not found. 
+
+
+Source Program: 
+const a = 5, b = 3;
+    var c, d;
+begin
+    while b > d do
+        d := (a + b); 
+end
+
+***** Error number 13, Period symbol not found. 
+ 
