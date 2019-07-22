@@ -1,0 +1,2 @@
+var f,n;
+procedure fact;

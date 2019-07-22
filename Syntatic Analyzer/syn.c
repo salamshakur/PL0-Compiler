@@ -41,6 +41,7 @@ void block()
     // adding in procedures
     if(lexemes->arr[lexCount].tokenType == procsym)
     {
+        printf("procedure found! \n");
         procDeclaration();
         
         lexCount++;
