@@ -38,6 +38,14 @@ void block()
         lexCount++; 
     }
 
+    // adding in procedures
+    if(lexemes->arr[lexCount].tokenType == procsym)
+    {
+        procDeclaration();
+        
+        lexCount++;
+    }
+
     code[0].m = codeCount;
 
     emit(INC, 0, 0, addrCount);
@@ -69,7 +77,7 @@ void constDeclaration()
         
         int val = atoi(lexemes->arr[lexCount].name); 
 
-        insert(1, name, val, 0, 0, 0, NA); 
+        insert(1, name, val, 0, 0, NA); 
 
         lexCount++; 
 
@@ -103,6 +111,38 @@ void varDeclaration()
     
     if(lexemes->arr[lexCount].tokenType != semicolonsym) 
         ERROR_Syn(5);  
+}
+
+// added procedure declaration function
+void procDeclaration()
+{
+    name = malloc(sizeof(char) * (maxChar + 1));
+    
+    lexCount++;
+
+    if(lexemes->arr[lexCount].tokenType != identsym)
+        ERROR_Syn(1);
+    
+    (lookUp(lexemes->arr[lexCount].name) == -1)? strcpy(name, lexemes->arr[lexCount].name) : ERROR_Syn(2); 
+
+    lexCount++;
+
+    if(lexemes->arr[lexCount].tokenType != semicolonsym)
+        ERROR_Syn(5);
+    
+    lexCount++;
+
+    insert(3, name, NA, lvlCount, NA, 0);
+
+    lvlCount++;
+
+    block();
+
+    lexCount++;
+
+    if(lexemes->arr[lexCount].tokenType != semicolonsym)
+        ERROR_Syn(5);
+    
 }
 
 void statementDeclaration()

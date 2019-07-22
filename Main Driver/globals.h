@@ -28,6 +28,7 @@ symbol * symTable;
 instr  * code;
 int      symCount   = 1;
 int      lexCount   = 0;
+int      lvlCount   = 0;
 int      addrCount  = 4;
 int      codeCount  = 0;
 char   * name;

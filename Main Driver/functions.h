@@ -29,6 +29,7 @@ void    program();
 void    block();
 void    constDeclaration();
 void    varDeclaration();
+void    procDeclaration();
 void    statementDeclaration();
 void    conditionDeclaration();
 void    expressionDeclaration();
