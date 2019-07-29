@@ -15,18 +15,6 @@ void virtual()
 void fetch()
 {
     ir = code;
-    // int op, r, l, m;
-    // ir = calloc(sizeof(instr), MAX_CODE_LENGTH);
-
-    // int i = 0;
-    // while(fscanf(fp, "%d %d %d %d", &op, &r, &l, &m) != EOF)
-    // {
-    //     ir[i].op = op;
-    //     ir[i].r  = r;
-    //     ir[i].l  = l;
-    //     ir[i].m  = m;
-    //     i++;
-    // }
 
     printInstructions(codeCount, ir);
 }

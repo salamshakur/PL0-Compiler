@@ -138,10 +138,10 @@ void procDeclaration()
     
     lexCount++;
 
-    lvlCount++;
-    
     insert(3, name, 0, lvlCount, codeCount, 0);
 
+    lvlCount++;
+    
     block();
 
     lexCount++;
@@ -150,6 +150,7 @@ void procDeclaration()
         ERROR_Syn(5);
 
     emit(RTN, 0, 0, 0);
+
     int tempIndex = symCount -1;
 
     while(symTable[tempIndex].lvl >= lvlCount)
@@ -168,7 +169,6 @@ void statementDeclaration()
         int i = lookUp(lexemes->arr[lexCount].name); 
             
         if(i == -1){
-            printf("state name - %s \n", lexemes->arr[lexCount].name);
             ERROR_Syn(6); 
         }
 
@@ -258,7 +258,6 @@ void statementDeclaration()
         int i = lookUp(lexemes->arr[lexCount].name);
 
         if(i == -1){
-            printf("read name - %s \n", lexemes->arr[lexCount].name);
             ERROR_Syn(6); 
         }
 
@@ -283,7 +282,6 @@ void statementDeclaration()
         int i = lookUp(lexemes->arr[lexCount].name);
 
         if(i == -1){
-            printf("write name - %s \n", lexemes->arr[lexCount].name);
             ERROR_Syn(6); 
         }
         
@@ -303,9 +301,8 @@ void statementDeclaration()
             ERROR_Syn(1);
         
         int i = lookUp(lexemes->arr[lexCount].name);
-        printf("i - %d, name - %s \n", i, lexemes->arr[lexCount].name);
+
         if(i == -1){
-            printf("call name - %s \n", lexemes->arr[lexCount].name);
             ERROR_Syn(6); 
         }
         
@@ -447,7 +444,6 @@ void factorDeclaration()
         int i = lookUp(lexemes->arr[lexCount].name);
 
         if(i == -1){
-            printf("factor name - %s \n", lexemes->arr[lexCount].name);
             ERROR_Syn(6); 
         }
         
@@ -488,8 +484,11 @@ int lookUp(char name[])
     for(int i = 0; i < n; n--)
     {
         if(strcmp(name, symTable[n].name) == 0){
-            if(symTable[n].mark == 1) 
+
+            if(symTable[n].mark == 1)
+            {
                 continue;
+            } 
             return n;
         }
     }
