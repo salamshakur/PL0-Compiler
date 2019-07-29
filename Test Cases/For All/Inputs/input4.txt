@@ -1,0 +1,39 @@
+/* Should fill entire stack without issue, given stack height of 23 */
+var a, b;
+
+procedure x;
+	var f, g, h, i;
+	procedure y;
+		const j = 10;
+		var k;
+		procedure z;
+			var j, k;
+			begin
+				read j;
+				write j;
+			end;
+		begin
+			k := i + b * 2; /* 13 */
+			while k > j do
+			begin
+				k := k - 2;
+				if k > 10 then
+					write f /* 6 */
+				else
+					write h; /* 8 */
+			end;
+			write a;
+		end;	
+	begin
+		f := 6;
+		g := 7;
+		h := 8;
+		i := 9;
+		call y;
+	end;
+
+begin
+	a := 1;
+	b := 2;
+	call x;
+end.

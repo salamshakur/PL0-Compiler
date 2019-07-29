@@ -181,7 +181,7 @@ void statementDeclaration()
 
         expressionDeclaration(); 
 
-        emit(STO, --regPointer, 0, symTable[i].addr);
+        emit(STO, --regPointer, (lvlCount - symTable[i].lvl), symTable[i].addr);
     }
 
     else if(lexemes->arr[lexCount].tokenType == beginsym)
@@ -265,7 +265,7 @@ void statementDeclaration()
 
         emit(SIO, 0, 0, 2);
 
-        emit(STO, 0, 0, symTable[i].addr);
+        emit(STO, 0, (lvlCount - symTable[i].lvl), symTable[i].addr);
 
         if(regPointer < 0)
             regPointer = 0;
@@ -286,9 +286,9 @@ void statementDeclaration()
         }
         
         if(symTable[i].kind == 2)
-            emit(LOD, 0, 0, symTable[i].addr);
+            emit(LOD, 0, (lvlCount - symTable[i].lvl), symTable[i].addr);
         else
-            emit(LIT, 0, 0, symTable[i].val);
+            emit(LIT, 0, (lvlCount - symTable[i].lvl), symTable[i].val);
 
         emit(SIO, 0, 0, 1);
     }
@@ -448,9 +448,9 @@ void factorDeclaration()
         }
         
         if(symTable[i].kind == 2)
-            emit(LOD, regPointer++, 0, symTable[i].addr);
+            emit(LOD, regPointer++, (lvlCount - symTable[i].lvl), symTable[i].addr);
         else if(symTable[i].kind == 1)
-            emit(LIT, regPointer++, 0, symTable[i].val);
+            emit(LIT, regPointer++, (lvlCount - symTable[i].lvl), symTable[i].val);
         else
             ERROR_Syn(16);
     }
