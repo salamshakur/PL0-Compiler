@@ -41,7 +41,7 @@ void block()
     // adding in procedures
     if(lexemes->arr[lexCount].tokenType == procsym)
     {
-        printf("procedure found! \n");
+
         procDeclaration();
         
         lexCount++;
@@ -78,7 +78,7 @@ void constDeclaration()
         
         int val = atoi(lexemes->arr[lexCount].name); 
 
-        insert(1, name, val, 0, 0, NA); 
+        insert(1, name, val, 0, 0, 0); 
 
         lexCount++; 
 
@@ -100,9 +100,14 @@ void varDeclaration()
         if(lexemes->arr[lexCount].tokenType != identsym) 
             ERROR_Syn(1);
         
-        (lookUp(lexemes->arr[lexCount].name) == -1)? strcpy(name, lexemes->arr[lexCount].name) : ERROR_Syn(2); 
+        int i = lookUp(lexemes->arr[lexCount].name);
 
-        insert(2, name, 0, 0, addrCount, 0); 
+        if(i != -1 && symTable[i].lvl == lvlCount) 
+            ERROR_Syn(2); 
+
+        strcpy(name, lexemes->arr[lexCount].name);
+
+        insert(2, name, 0, lvlCount, addrCount, 0); 
 
         addrCount++; 
 
@@ -133,9 +138,9 @@ void procDeclaration()
     
     lexCount++;
 
-    insert(3, name, NA, lvlCount, NA, 0);
-
     lvlCount++;
+    
+    insert(3, name, 0, lvlCount, codeCount, 0);
 
     block();
 
@@ -143,7 +148,17 @@ void procDeclaration()
 
     if(lexemes->arr[lexCount].tokenType != semicolonsym)
         ERROR_Syn(5);
-    
+
+    emit(RTN, 0, 0, 0);
+    int tempIndex = symCount -1;
+
+    while(symTable[tempIndex].lvl >= lvlCount)
+    {
+        symTable[tempIndex].mark = 1;
+        tempIndex--;
+    }
+
+    lvlCount--;
 }
 
 void statementDeclaration()
@@ -152,7 +167,10 @@ void statementDeclaration()
     {
         int i = lookUp(lexemes->arr[lexCount].name); 
             
-        if(i == -1) ERROR_Syn(6); 
+        if(i == -1){
+            printf("state name - %s \n", lexemes->arr[lexCount].name);
+            ERROR_Syn(6); 
+        }
 
         lexCount++; 
 
@@ -239,7 +257,10 @@ void statementDeclaration()
 
         int i = lookUp(lexemes->arr[lexCount].name);
 
-        if(i == -1) ERROR_Syn(6);
+        if(i == -1){
+            printf("read name - %s \n", lexemes->arr[lexCount].name);
+            ERROR_Syn(6); 
+        }
 
         if(symTable[i].kind != 2) ERROR_Syn(15);
 
@@ -261,8 +282,10 @@ void statementDeclaration()
 
         int i = lookUp(lexemes->arr[lexCount].name);
 
-        if(i == -1)
-            ERROR_Syn(6);
+        if(i == -1){
+            printf("write name - %s \n", lexemes->arr[lexCount].name);
+            ERROR_Syn(6); 
+        }
         
         if(symTable[i].kind == 2)
             emit(LOD, 0, 0, symTable[i].addr);
@@ -270,6 +293,26 @@ void statementDeclaration()
             emit(LIT, 0, 0, symTable[i].val);
 
         emit(SIO, 0, 0, 1);
+    }
+
+    else if(lexemes->arr[lexCount].tokenType == callsym)
+    {
+        lexCount++;
+
+        if(lexemes->arr[lexCount].tokenType != identsym)
+            ERROR_Syn(1);
+        
+        int i = lookUp(lexemes->arr[lexCount].name);
+        printf("i - %d, name - %s \n", i, lexemes->arr[lexCount].name);
+        if(i == -1){
+            printf("call name - %s \n", lexemes->arr[lexCount].name);
+            ERROR_Syn(6); 
+        }
+        
+        if(symTable[i].kind != 3)
+            ERROR_Syn(18);
+        
+        emit(CAL, 0, (lvlCount - symTable[i].lvl), symTable[i].addr);
     }
 
     else 
@@ -403,8 +446,10 @@ void factorDeclaration()
     {
         int i = lookUp(lexemes->arr[lexCount].name);
 
-        if(i == -1)
-            ERROR_Syn(6);
+        if(i == -1){
+            printf("factor name - %s \n", lexemes->arr[lexCount].name);
+            ERROR_Syn(6); 
+        }
         
         if(symTable[i].kind == 2)
             emit(LOD, regPointer++, 0, symTable[i].addr);
@@ -437,14 +482,16 @@ void factorDeclaration()
     }
 }
 
-
 int lookUp(char name[])
 {
     int n = symCount;
     for(int i = 0; i < n; n--)
     {
-        if(strcmp(name, symTable[n].name) == 0)
+        if(strcmp(name, symTable[n].name) == 0){
+            if(symTable[n].mark == 1) 
+                continue;
             return n;
+        }
     }
     return -1;
 }
@@ -504,6 +551,7 @@ void ERROR_Syn(int val)
         case 15: message = "Variable not found"; break;
         case 16: message = "Constant/Variable not found."; break;
         case 17: message = "Identifier/Number/Expression not found."; break;
+        case 18: message = "Procedure not found"; break;
     }
     printf("***** Error number %d, %s \n", val, message);
     exit(1);
